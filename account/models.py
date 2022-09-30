@@ -1,14 +1,7 @@
-from asyncio.windows_events import NULL
-from locale import normalize
+
 from django.db import models
-from django_countries.fields import CountryField
-# from product.models import CartItem
-from django.contrib.auth.models import AbstractBaseUser, AbstractUser, UserManager, BaseUserManager
 
-
-# Create your models here.
-# import product.models
-# import product.models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class UserManager(BaseUserManager):
@@ -86,7 +79,6 @@ class User(AbstractBaseUser):
 
 class UserAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=10)
     email = models.EmailField(max_length=225)

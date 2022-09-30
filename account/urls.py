@@ -13,9 +13,5 @@ urlpatterns = [
     path('changepass/', views.change_pass, name='changepass'),
     path('address/', views.address_manage, name='address'),
     path('editaddress/<id>/', views.edit_address, name='editaddress'),
-    path('csv/', views.export_csv, name='export_csv'),
-    path('pdf', views.export_pdf, name='export_pdf'),
-
-    # path('home/', views.product_home, name='home_otp'),
 
 ]

@@ -7,7 +7,7 @@
 
 
 
-
+<script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
 
             <div class="container">
@@ -50,7 +50,7 @@
     <div class="col-md-6 my-4">
         <div class="bg-white">
             <div class="card-body" style="text-align:center;">
-                <h5>Monthly Sales</h5>
+                <h5>Weekly Sales</h5>
                 <canvas id="myChart1" width="400" height="300"></canvas>
                 <script>
                     var ctx = document.getElementById('myChart1').getContext('2d');
@@ -146,26 +146,121 @@
             <div class="col-md-12 my-4">
         <div class="bg-white">
             <div class="card-body" style="text-align:center;">
-                <table class="container">
-                    {% for i in payment %}
+                <table class="container table" id="table" hidden>
+                    <thead>
+
                     <tr>
     <th>Name</th>
-    <th>Contact</th>
-    <th>Country</th>
+    <th>Payment ID</th>
+    <th>Order ID</th>
+    <th>Ordered At</th>
+    <th>Amount Paid</th>
+
+    <th>Payment Method</th>
   </tr>
+                    </thead>
+                    <tbody>
+                    {% for i in payment %}
   <tr>
     <td>{{ i.user.name }}</td>
-    <td>{{i.payment_id}}}</td>
-    <td>Germany</td>
+    <td>{{i.payment_id}}</td>
+    <td>{{i.order_id}}</td>
+    <td>{{i.created_at}}</td>
+    <td>{{i.amount_paid}}</td>
+
+    <td>{{i.payment_method}}</td>
+
   </tr>
-  <tr>
-    <td>Centro comercial Moctezuma</td>
-    <td>Francisco Chang</td>
-    <td>Mexico</td>
-  </tr>
+
                     {% endfor %}
+                    </tbody>
                 </table>
+                                                 <script type="text/javascript" charset="utf8"
+                src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+                <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+                <script src="
+                https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js
+                "></script>
+                <script src="
+                https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js
+                "></script>
+                <script src="
+                https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js
+                "></script>
+                <script src="
+                https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js
+                "></script>
+                <script src="
+                https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js
+                "></script>
+                <script>
+                  $(function () {
+                    $('#table').DataTable({
+                      dom: 'Bfrtip',
+                      buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                      ],
+                      "ordering":false
+                    });
+                  });
+                </script>
+                <script>
+                    const element = document.getElementById("table_filter");
+                    element.style.visibility= "hidden";
+                </script>
+                <style>
+    .dataTables_filter{
+    visibility:hidden;
+    }
+    .dataTables_info{
+    visibility:hidden;
+    }
+    .dataTables_paginate{
+    visibility:hidden;
+    }
+      .buttons-copy{
+        background: aqua;
+        color: white;
+      }
+      .buttons-csv{
+        background: red;
+        color: white;
+        border-color: black;
+      }
+      .buttons-excel{
+        background:lime;
+        color: white;
+        border-color: black;
+        border-radius: 5%;
+        border: 5px;
+      }
+      .buttons-pdf{
+        background:orange;
+        color: white;
+        border-color: black;
+        border-radius: 5%;
+        border: 5px;
+      }
+      .buttons-print{
+        background:blue;
+        color: white;
+        border-color: black;
+        border-radius: 5%;
+        border: 5px;
+      }
+      .dataTables_filter{
+        float: right;
+        color: red;
+        font-weight: 500;
+      }
+      .paginate_button{
+        margin-right: 5px;
+      }
+    </style>
+
+
             </div>
         </div>
             </div>
+
             {% endblock %}

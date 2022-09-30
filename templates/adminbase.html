@@ -82,10 +82,6 @@
     <div class="w3-sidebar w3-bar-block w3-collapse w3-card w3-animate-left" style="width:200px;" id="mySidebar">
       <button class="w3-bar-item w3-button w3-large w3-hide-large" onclick="w3_close()">Close &times;</button>
       <span class="badge bg-success"><a href="{% url 'dashboard' %}" class="w3-bar-item w3-button btn btn-success">Dashboard</a></span>
-        {% if request.path == '/manage/dashboard/' %}
-        <a href="{% url 'export_csv' %}" class="w3-bar-item w3-button">Export To Csv</a>
-      <a href="{% url 'export_pdf' %}" class="w3-bar-item w3-button">Export To PDF</a>
-        {% endif %}
       <a href="{% url 'usermanagement' %}" class="w3-bar-item w3-button">user management</a>
       <a href="{% url 'productmanagement' %}" class="w3-bar-item w3-button">Product management</a>
         {% if request.path == '/manage/productmanagement/' or request.path == path %}

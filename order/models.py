@@ -2,7 +2,6 @@ from django.utils import timezone
 
 from django.db import models
 from account.models import User
-from django_countries.fields import CountryField
 
 # Create your models here.
 

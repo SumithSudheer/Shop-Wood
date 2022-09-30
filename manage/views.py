@@ -1,18 +1,15 @@
 import datetime
-
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from account.models import User
 from order.models import Order, Payment
-from product.models import Category, Product, Coupons
+from product.models import Category
 from product.forms import *
 from django.core.paginator import Paginator
 from django.contrib.postgres.search import SearchVector
-from django.db.models import Sum, Count
-from .fusionchart import FusionCharts
-from django.core.files.storage import FileSystemStorage
+from django.db.models import Sum
 
 
 # Create your views here.
@@ -32,18 +29,11 @@ def index(request):
 def dashboard(request):
     if request.user.is_authenticated and request.user.active:
         product = Product.objects.all()
-
         user_count = User.objects.all().count()
-        print(user_count)
         order_price = Payment.objects.all().aggregate(Sum('amount_paid'))
-
         total_income = order_price['amount_paid__sum']
-        print(total_income)
-
         order_count = Order.objects.all().count()
-        print(order_count)
         product_count = product.count()
-        print(product_count)
         a = []
         for i in product:
             o = Order.objects.filter(product_id=i.id).aggregate(Sum('total_price'))
@@ -59,7 +49,6 @@ def dashboard(request):
 
 def usermanagement(request):
     if request.user.is_authenticated and request.user.active:
-
         text = request.GET.get('searchs')
         if text is not None:
             table = User.objects.annotate(search=SearchVector('id', 'name', 'email', 'phone')).filter(
@@ -68,7 +57,6 @@ def usermanagement(request):
             page_number = request.GET.get('page')
             page_obj = table1.get_page(page_number)
             return render(request, 'usermanagement.html', context={'page_obj': page_obj})
-
         table = User.objects.all().values('id', 'name', 'email', 'active', 'phone').order_by('id')
         table1 = Paginator(table, 10)
         page_number = request.GET.get('page')
@@ -80,13 +68,10 @@ def usermanagement(request):
 def block_user(request, id):
     if request.user.is_authenticated and request.user.active:
         flag = User.objects.all().values('active').get(id=id)
-
         if flag['active'] == True:
-
             User.objects.filter(id=id).update(active=False)
             return redirect(usermanagement)
         else:
-
             User.objects.filter(id=id).update(active=True)
             return redirect(usermanagement)
     return redirect(index)
@@ -106,7 +91,6 @@ def categorymanagement(request):
         table1 = Paginator(table, 10)
         page_number = request.GET.get('page')
         page_obj = table1.get_page(page_number)
-        print(type(table1))
         return render(request, 'Categorymanagement.html', context={'page_obj': page_obj})
     return redirect(index)
 
@@ -176,7 +160,6 @@ def editproduct(request, id):
     if request.user.is_authenticated and request.user.active:
         product = Product.objects.get(id=id)
         path = request.path
-        print(type(path))
         if request.method == 'POST':
             form = ProductForm(request.POST, request.FILES, instance=product)
 
@@ -285,7 +268,6 @@ def add_coupons(request):
             form = CouponForm(request.POST)
 
             if form.is_valid():
-                print('Success')
                 form.save()
 
         form = CouponForm()
@@ -313,26 +295,19 @@ def edit_coupons(request, id):
 
 def sales_report(request):
     product = Product.objects.all()
-
     ymax = timezone.now()
     ymin = (timezone.now() - datetime.timedelta(days=365))
     yearly = Order.objects.filter(order_at__lte=ymax, order_at__gte=ymin)
-    print(yearly)
-    print(ymin)
     mmax = timezone.now()
     mmin = (timezone.now() - datetime.timedelta(days=30))
     monthly = Order.objects.filter(order_at__lte=mmax, order_at__gte=mmin)
-    print(monthly)
     ymax = timezone.now()
     ymin = (timezone.now() - datetime.timedelta(days=7))
     weekly = Order.objects.filter(order_at__lte=ymax, order_at__gte=ymin)
     a = []
     n = 1
     subm = timezone.now()
-
-
     n = 4
-
     for i in range(4):
         k = 0
         for i in monthly:
@@ -344,22 +319,17 @@ def sales_report(request):
         subm = subm - datetime.timedelta(days=7)
 
     subw = timezone.now()
-    n=7
-    b=[]
+    n = 7
+    b = []
     for i in range(7):
         k = 0
         for i in weekly:
-            if i.order_at <= subw and i.order_at>=(subw - datetime.timedelta(days=1)):
+            if i.order_at <= subw and i.order_at >= (subw - datetime.timedelta(days=1)):
                 k += 1
-        b.append({'name':'day'+str(n), 'value':k})
+        b.append({'name': 'day' + str(n), 'value': k})
         n -= 1
         subw = subw - datetime.timedelta(days=1)
-
-    print(len(a))
     monthly_sales = list(reversed(a))
-    print(list(reversed(a)))
-
-    print(b)
     weekly_sales = list(reversed(b))
     user_count = User.objects.all().count()
     order_price = Payment.objects.all().aggregate(Sum('amount_paid'))
@@ -367,8 +337,7 @@ def sales_report(request):
     order_count = Order.objects.all().count()
     product_count = product.count()
     payment = Payment.objects.all()
-    print(payment)
-
     return render(request, 'salesreport.html',
-                  context={'monthly': monthly, 'yearly': yearly, 'monthly_sales': monthly_sales, 'weekly_sales' : weekly_sales,'user_count': user_count, 'total_income': total_income,
-                               'order_count': order_count, 'product_count': product_count, 'payment':payment})
+                  context={'monthly': monthly, 'yearly': yearly, 'monthly_sales': monthly_sales,
+                           'weekly_sales': weekly_sales, 'user_count': user_count, 'total_income': total_income,
+                           'order_count': order_count, 'product_count': product_count, 'payment': payment})

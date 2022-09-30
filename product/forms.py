@@ -3,11 +3,11 @@ from django.forms import fields
 from .models import Product, Coupons
 from django import forms
 
+
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = '__all__'
-        # fields = ['title', 'price', 'category']
 
     def init(self, *args, **kwargs):
         super(ProductForm, self).init(*args, **kwargs)
@@ -36,4 +36,4 @@ class ProductForm(forms.ModelForm):
 class CouponForm(forms.ModelForm):
     class Meta:
         model = Coupons
-        fields = ['coupon_name', 'coupon_offer','coupon_code', 'coupon_min', 'coupon_start', 'coupon_end']
+        fields = ['coupon_name', 'coupon_offer', 'coupon_code', 'coupon_min', 'coupon_start', 'coupon_end']
