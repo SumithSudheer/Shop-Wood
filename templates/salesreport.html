@@ -1,0 +1,171 @@
+{% extends "adminbase.html" %}
+
+
+        {% block content %}
+        <div class="row ">
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+
+            <div class="container">
+
+    <div class="row">
+    <div class="col-md-3">
+      <div class="card-counter primary">
+        <i class="fa fa-code-fork"></i>
+        <span class="count-numbers">{{product_count}}</span>
+        <span class="count-name">Products</span>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card-counter danger">
+        <i class="fa fa-ticket"></i>
+        <span class="count-numbers">{{order_count}}</span>
+        <span class="count-name">Orders</span>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card-counter success">
+        <i class="fa fa-database"></i>
+        <span class="count-numbers">{{total_income}}</span>
+        <span class="count-name">Total Income</span>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card-counter info">
+        <i class="fa fa-users"></i>
+        <span class="count-numbers">{{user_count}}</span>
+        <span class="count-name">Users</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="col-md-6 my-4">
+        <div class="bg-white">
+            <div class="card-body" style="text-align:center;">
+                <h5>Monthly Sales</h5>
+                <canvas id="myChart1" width="400" height="300"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart1').getContext('2d');
+                    var myChart1 = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [{% for i in weekly_sales %} '{{i.name}}', {% endfor %}],
+                    datasets: [{
+                        label: 'Orders',
+                        data: [{% for i in weekly_sales %} {{ i.value }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                    }]
+                        },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 my-4">
+
+        <div class="bg-white">
+            <div class="card-body" style="text-align:center;">
+                <h5>Monthly Sales</h5>
+                <canvas id="myChart" width="400" height="300"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [{% for i in monthly_sales %} '{{i.name}}', {% endfor %}],
+                    datasets: [{
+                        label: 'Orders',
+                        data: [{% for i in monthly_sales %} {{ i.value }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                    }]
+                        },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+            <div class="col-md-12 my-4">
+        <div class="bg-white">
+            <div class="card-body" style="text-align:center;">
+                <table class="container">
+                    {% for i in payment %}
+                    <tr>
+    <th>Name</th>
+    <th>Contact</th>
+    <th>Country</th>
+  </tr>
+  <tr>
+    <td>{{ i.user.name }}</td>
+    <td>{{i.payment_id}}}</td>
+    <td>Germany</td>
+  </tr>
+  <tr>
+    <td>Centro comercial Moctezuma</td>
+    <td>Francisco Chang</td>
+    <td>Mexico</td>
+  </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+            </div>
+            {% endblock %}

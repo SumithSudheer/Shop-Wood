@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cart</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<body>
+{% include 'includes/navbar.html' %}
+
+<section class="h-100 gradient-custom">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center my-4">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0">Orders</h5>
+          </div>
+          {% for i in page_obj %}
+
+          <div class="card-body">
+            <!-- Single item -->
+
+            <div class="row">
+              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <!-- Image -->
+                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+
+                  <img src="/media/{{i.product.image1}}"
+                    class="w-100" alt="Blue Jeans Jacket" />
+                  <a href="#!">
+                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                  </a>
+                </div>
+                <!-- Image -->
+              </div>
+
+              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                <!-- Data -->
+                <p><strong>{{ i.product.title }}</strong></p>
+                <p>Quantity : {{ i.quantity }}</p>
+
+                {% if i.status %}
+                {% if i.payment_method == '1' %}
+                  <p>Payment Method COD </p>
+                {% else %}
+                  <p>Payment Method UPI</p>
+                {% endif %}
+
+                {% if i.delivery_status == 'P' %}
+                  <p>Delivery Status: Pending</p>
+                  <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
+                  title="Remove item">
+                  <a href="{% url 'order' i.id %}" class="text-white">Cancel</a>
+                </button>
+                {% else %}
+                  <p>Delivery Status: Deliverd</p>
+                {% endif %}
+                {% else %}
+                <p>Canceled</p>
+                {% endif %}
+                <a href="{% url 'order_view' i.id %}"> view order </a>
+
+
+
+                <!-- Data -->
+              </div>
+
+              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+
+
+                <!-- Price -->
+                <p class="text-start text-md-center">
+                  <strong>${{ i.total_price }}</strong>
+                </p>
+                <!-- Price -->
+              </div>
+            </div>
+
+            <!-- Single item -->
+
+            <hr class="my-4" />
+            {% endfor %}
+
+
+          </div>
+           <div class="pagination">
+    <span class="step-links">
+        <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+      <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+      </li>
+           <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+      <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              </li>
+        {% endif %}
+        </ul>
+        </nav>
+    </span>
+</div>
+
+        </div>
+        </div>
+
+
+    </div>
+
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>

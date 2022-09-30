@@ -1,0 +1,73 @@
+{% extends "adminbase.html" %}
+
+
+
+        {% block content %}
+        <form method="GET" action="">
+            <div class="input-group mb-3" style="width:20%;">
+              <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" name="searchs">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+            </div>
+        </form>
+
+
+
+            <table class="table table-hover">
+            <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Offer</th>
+                  <th scope="col">Coupon Code</th>
+                    <th scope="col">Start Time</th>
+                  <th scope="col">End Time</th>
+                  <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for i in page_obj %}
+                <tr>
+                  <th scope="row">{{ i.id }}</th>
+                  <td>{{ i.coupon_name }}</td>
+                  <td>{{ i.coupon_offer }} %</td>
+                    <td>{{ i.coupon_code }}</td>
+                  <td>{{ i.coupon_start }}</td>
+                  <td>{{ i.coupon_end }}</td>
+
+                    <td><a class="text-white bg-success" style="text-decoration: none;" href="{% url 'editcoupons' i.id %}">Edit</a></td>
+                  <td><a class="text-white bg-danger" style="text-decoration: none;" href="{% url 'deletecategory' i.id %}">Delete</a></td>
+                </tr>
+              {% endfor %}
+
+              </tbody>
+          </table>
+            <div class="pagination">
+    <span class="step-links">
+        <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+      <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+      </li>
+           <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+      <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              </li>
+        {% endif %}
+        </ul>
+        </nav>
+    </span>
+                {% endblock %}

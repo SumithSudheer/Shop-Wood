@@ -1,0 +1,88 @@
+{% extends "adminbase.html" %}
+
+
+{% block content %}
+        <form method="GET" action="">
+            <div class="input-group mb-3" style="width:20%;">
+              <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2" name="searchs">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+            </div>
+        </form>
+
+
+    <div class="w3-container">
+
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                  <th scope="col">id</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Payment Status</th>
+                  <th scope="col">Delivery Satus</th>
+
+                  <th scope="col">Cancel</th>
+
+
+                </tr>
+              </thead>
+              <tbody>
+              {% for i in page_obj %}
+                <tr>
+
+                  <th scope="row">{{ i.id }}</th>
+                  <td>{{ i.user.name }}</td>
+                  <td>{{ i.product.title }}</td>
+
+                  <td>{{ i.total_price }}</td>
+                    {% if i.payment_method == '1' %}
+                  <td>COD</td>
+                    {% else %}
+                    {% if i.payment_status %}
+                  <td>Done</td>
+                    {% else %}
+                  <td>Pending</td>
+                    {% endif %}
+                    {% endif %}
+                  <td>{% if i.delivery_status == 'P' %}<a class="btn btn-success" href="{% url 'delivery_status' i.id%}">pending</a>{% elif i.delivery_status == 'S' %}<a class="btn btn-success"  href="{% url 'delivery_status' i.id%}">Shipped</a>{% else %}<p class="btn btn-success" >Delivered</p>{% endif %}</td>
+
+<!--                  <td><a class="text-white bg-success" style="text-decoration: none;" href="{% url 'editproduct' i.id %}">Edit</a></td>-->
+
+                  <td>{% if i.status %}<a class="text-white bg-danger" style="text-decoration: none;" href="{% url 'ordercancel' i.id %}">Cancel</a> {% else %} Canceled {% endif %}</td>
+
+                </tr>
+              {% endfor %}
+
+              </tbody>
+          </table>
+                    <div class="pagination">
+    <span class="step-links">
+        <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+      <li class="page-item">
+            <a class="page-link" href="?page=1">&laquo; first</a>
+      </li>
+           <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+      <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              </li>
+        {% endif %}
+        </ul>
+        </nav>
+    </span>
+                        {% endblock %}

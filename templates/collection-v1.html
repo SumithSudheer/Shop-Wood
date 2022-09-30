@@ -1,0 +1,198 @@
+{% extends "Base.html" %}
+{% load static %}
+{% static 'static' as baseUrl %}
+
+
+
+
+      {% block content %}
+        <section class="section hero-home-v1 wf-section">
+            <div class="container-default w-container">
+                <div data-w-id="d58256b8-cf1e-d7ea-4dde-efb457077c7e" style="opacity:0"
+                    class="section-background-image">
+                    <div class="container-inner-590px">
+                        <div data-w-id="d58256b8-cf1e-d7ea-4dde-efb457077c80"
+                            style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+                            class="text-center">
+                            <h1 class="color-white">Collection 1</h1>
+                            <p class="color-white">Lorem ipsum dolor sit amet consectetur adipiscing elit facilisi
+                                pellentesque cursus eget morbi sagittis sagittis commodo massa aliquam.</p>
+                            <div class="mg-top-24px"><a href="#"
+                                    class="button-primary button-white w-button">Explore products</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section category wf-section">
+            <div class="container-default w-container">
+                <div id="products" class="w-layout-grid grid-sidebar">
+                    <div class="sidebar-container">
+                        <div data-w-id="00932b4c-a047-a16a-55d9-aa2b0acb1f6c" class="card sidebar">
+                            <h3>Sort by</h3>
+                            <div class="sidebar-categories-wrapper last">
+                                <div class="heading-h4-size mg-bottom-20px">Category</div>
+                                <ul role="list" class="links-list">
+                                    {% for i in category %}
+                                    <li class="links-list-item"><a data-w-id="00932b4c-a047-a16a-55d9-aa2b0acb1f90"
+                                            href="{% url 'productsf' i.id %}"
+                                            class="link-arrow-wrapper left w-inline-block">
+                                            <div>{{ i.name }}</div>
+                                            <div class="icon-font arrow link"></div>
+                                        </a></li>
+                                    {% endfor %}
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div data-w-id="00932b4c-a047-a16a-55d9-aa2b0acb1fa7" class="card sidebar last">
+                            <h3>Popular products</h3>
+                            <div class="w-dyn-list">
+                                <div role="list" class="mg-top-24px w-dyn-items">
+                                    {% for i in page_obj %}
+                                    <div role="listitem" class="w-dyn-item"><a href="{% url 'productview' i.id %}"
+                                            class="product-card-link-wrapper sidebar w-inline-block">
+                                            <div class="image-wrapper blog-card sidebar"><img
+                                                   src="/media/{{i.image1}}" style="width:500px;height:100px;" alt="Indoor Lounge Chair" sizes="(max-width: 479px) 100vw, 80px " >
+<!--                                                   "data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_main_image_4dr%22%2C%22to%22%3A%22src%22%7D%5D"-->
+
+<!--                                                    srcset="https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template-p-500.jpeg 500w, https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template-p-800.jpeg 800w, https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template-p-1080.jpeg 1080w, https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template.jpg 1212w"-->
+                                                    </div>
+                                            <div>
+                                                <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
+                                                    class="blog-card-date sidebar">$ {{ i.price }} INR</div>
+                                                <h4 class="heading-h5-size mg-bottom-0">{{ i.title }}</h4>
+                                            </div>
+                                        </a></div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-w-id="4f845590-cd4d-6d61-216f-be783800d4ff"
+                        style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+                        class="w-dyn-list">
+                        <div role="list" class="grid-2-columns products-sidebar w-dyn-items">
+                            {% for i in page_obj %}
+                            <div role="listitem" class="w-dyn-item"><a data-w-id="4f845590-cd4d-6d61-216f-be783800d502"
+                                    style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                                    href="{% url 'productview' i.id %}" class="card product-card w-inline-block">
+                                    <div class="image-wrapper product-card"><img
+                                            data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_main_image_4dr%22%2C%22to%22%3A%22src%22%7D%5D"
+                                           src="/media/{{i.image1}}" style="width:500px;height:300px;"
+                                            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                                            alt="Lisabo Dinning Table"
+                                            sizes="(max-width: 479px) 93vw, (max-width: 767px) 94vw, (max-width: 1439px) 46vw, 548px"
+                                             /></div>
+                                    <div class="product-card-details v6">
+                                        <div class="flex product-card-price-wrapper">
+                                            <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
+                                                class="product-card-price v6">$ {{ i.price }} USD</div>
+                                        </div>
+                                        <h2 style="color:rgb(10,10,10)" class="heading-h5-size product-title">{{ i.title }}</h2>
+                                        <div class="add-to-cart-wrapper v6">
+                                            <div>Add to cart</div>
+                                            <div style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                                                class="icon-font arrow add-to-cart"></div>
+                                        </div>
+                                    </div>
+                                </a></div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-left:35%;padding-right:35%;">
+            <div class="pagination" >
+    <span class="step-links">
+        <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+      <li class="page-item">
+            <a class="btn btn-light" href="?page=1">&laquo; first</a>
+      </li>
+           <li class="page-item"> <a class="btn btn-light" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+      <li class="page-item">
+            <a class=" btn btn-light" href="?page={{ page_obj.next_page_number }}">next</a>
+          </li>
+          <li class="page-item">
+            <a class="btn btn-light" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              </li>
+        {% endif %}
+        </ul>
+        </nav>
+    </span>
+</div>
+                </div>
+
+        </section>
+        <div data-w-id="bc6b0aba-05e8-826c-2831-d274e615df5a" class="container-default">
+            <div class="divider"></div>
+        </div>
+        <section class="section overflow-hidden wf-section">
+            <div class="container-default w-container">
+                <div class="container-inner-590px mg-bottom-40px">
+                    <div data-w-id="176c26b0-23ca-264a-a8f7-3950e2741018"
+                        style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+                        class="text-center">
+                        <h2>Featured Products</h2>
+                    </div>
+                </div>
+                <div data-delay="4000" data-animation="slide" class="slider-container w-slider" data-autoplay="false"
+                    data-easing="ease"
+                    style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+                    data-hide-arrows="true" data-disable-swipe="false" data-w-id="eb4cf5e4-cafa-e6e4-81c1-0e6fc677a8ff"
+                    data-autoplay-limit="0" data-nav-spacing="3" data-duration="500" data-infinite="true">
+                    <div class="slider-mask slider-product-card-collection-1 w-slider-mask">
+                        {% for i in product1 %}
+                        <div class="slide-item w-slide">
+                            <div class="w-dyn-list">
+                                <div role="list" class="w-dyn-items">
+                                    <div role="listitem" class="w-dyn-item"><a
+                                            data-w-id="eb4cf5e4-cafa-e6e4-81c1-0e6fc677a905"
+                                            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                                            href="{% url 'productview' i.id %}"
+                                            class="card product-card v7 w-inline-block">
+                                            <div class="product-card-details v7">
+                                                <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
+                                                    class="product-card-price v4">$ {{ i.price }} USD</div>
+                                                <h3 class="product-card-title">{{ i.title }}</h3>
+                                                <p class="product-subtext v7">{{ i.description }}</p>
+                                                <div class="button-primary product-card-v7">Add to cart</div>
+                                            </div>
+                                            <div class="image-wrapper product-card v7"><img
+                                                    src="/media/{{i.image1}}" style="width:500px;height:300px;"
+                                                    data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_main_image_4dr%22%2C%22to%22%3A%22src%22%7D%5D"
+                                                    alt="Indoor Lounge Chair"
+                                                    sizes="(max-width: 479px) 67vw, (max-width: 767px) 282px, (max-width: 991px) 372px, 308px"/>
+<!--                                                    srcset="https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template-p-500.jpeg 500w, https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template-p-800.jpeg 800w, https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template-p-1080.jpeg 1080w, https://assets.website-files.com/61003e54d0ee8c9598970a77/6108a31fa1b1d5e49f4ac35b_indoor-lounge-chair-shop-x-webflow-template.jpg 1212w"-->
+                                                    class="product-card-image v4"
+                                                </div>
+                                        </a></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="arrow-slider v4 w-slider-arrow-left">
+                        <div class="arrow-slider-icon left"></div>
+                    </div>
+                    <div class="arrow-slider w-slider-arrow-right">
+                        <div class="arrow-slider-icon"></div>
+                    </div>
+                    <div class="hidden-desktop w-slider-nav w-round"></div>
+                </div>
+            </div>
+        </section>
+    {% endblock %}
+
+

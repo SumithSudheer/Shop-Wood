@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pdf</title>
+  <style>
+  @page{
+    size: "A4";
+    margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+
+    @top-center{
+        content:"ShopWood"
+    }
+    @bottom-right{
+        content:"Page " counter(page) " of " "counter(pages):
+    }
+  }
+
+
+
+
+  </style>
+</head>
+<body>
+<h2>Orders </h2>
+<div class="table">
+    <thead class="thead">
+    <th>No</th>
+    <th>Payment_id</th>
+    <th>Payment_method</th>
+    <th>Amount_paid</th>
+    <th>Created_at</th>
+    </thead>
+    <tbody>
+    {% for i in order %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{i.payment_id}}</td>
+        <td>{{ i.payment_method }}</td>
+        <td>{{ i.amount_paid }}</td>
+        <td>{{ i.created_at }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+{% extends "Base.html" %}
+{% load static %}
+{% static 'static' as baseUrl %}
+
+
+
+
+      {% block content %}
+    <section class="section hero-home-v1 wf-section">
+      <div class="container-default w-container">
+        <div data-w-id="7a5cdf94-bda1-4c8d-62d9-0700fc2d8caa" style="opacity:0" class="section-background-image-v1">
+          <div class="container-inner-590px">
+            <div data-w-id="abcce278-4abd-c4fd-9dba-59f357b28058"
+              style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+              class="text-center">
+              <h1 class="color-white">Furniture design to make you feel at home</h1>
+              <p class="color-white">Lorem ipsum dolor sit amet consectetur adipiscing elit facilisi pellentesque cursus
+                eget morbi sagittis sagittis commodo massa aliquam.</p>
+              <div class="mg-top-24px"><a href="{% url 'products' %}"
+                  class="button-primary button-white w-button">Shop now</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section overflow-hidden pd-bottom-100px wf-section">
+      <div class="container-default w-container">
+        <div class="w-layout-grid grid-2-columns new-arrivals-home-v1">
+          <div data-w-id="4f015b90-0ac8-0c75-564b-5e38153199b4"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0">
+            <h2>New arrivals</h2>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dol</p>
+            <div class="mg-top-24px"><a href="{% url 'products' %}" class="button-secondary w-button">More
+                products</a></div>
+          </div>
+
+          <div data-w-id="9547135e-2d38-a8d5-7446-a3e4bba53f45"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0">
+            <div class="w-dyn-list">
+
+              <div role="list" class="grid-3-columns new-arrivals w-dyn-items">
+                {% for i in products %}
+                <div role="listitem" class="w-dyn-item"><a data-w-id="84cfc1e0-f20d-8a65-63ac-bcf7a364d5f5"
+                    style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                    href="{% url 'productview' i.id %}" class="card product-card w-inline-block">
+                    <div class="image-wrapper">
+                      <img
+                        data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_main_image_4dr%22%2C%22to%22%3A%22src%22%7D%5D"
+                        src="media/{{ i.image1 }} " style="width:500px;height:300px;"
+                        style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                        alt="media/{{ i.image1 }}"/>
+<!--                        sizes="(max-width: 479px) 93vw, (max-width: 767px) 94vw, (max-width: 991px) 46vw, (max-width: 1439px) 20vw, 244.75px"-->
+<!--                        srcset="/media/image/{{i.image1}}"-->
+<!--                        class="product-card-image" -->
+                      <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
+                        class="badge-position-absolute white">$ {{ i.price }} USD</div>
+                    </div>
+                    <div class="product-card-details">
+                      <div class="product-category">{{ i.category }}</div>
+                      <h3 style="color:rgb(10,10,10)" class="heading-h5-size product-title">{{ i.title }}</h3>
+                      <p class="product-subtext">{{ i.description }}</p>
+                    </div>
+                  </a></div>
+                {% endfor %}
+\
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-w-id="d3edd81d-3dc3-6b4b-68b1-0d2c01bffa2e"
+          style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+          class="w-layout-grid grid-3-columns collections-home-v1"><a data-w-id="47183936-1b80-9195-f4e2-d41f1a6ad0ce"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="/collections/collection-v1" class="card collection-card w-inline-block">
+            <div class="image-wrapper"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610a14a8bd4ad062d14cba3c_kitchen-and-appliances-collections-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Kitchen - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="collection-card-details">
+              <h3 class="collection-card-title">Kitchen &amp; appliances</h3>
+              <div class="text-arrow-wrapper">
+                <div class="text-50">Browse collection</div>
+                <div
+                  style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                  class="icon-font text-arrow-small"></div>
+              </div>
+            </div>
+          </a><a data-w-id="9ffa1c7a-0730-3140-c7c0-edae2067bf75"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="/collections/collection-v2" class="card collection-card w-inline-block">
+            <div class="image-wrapper"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610a14a7c5a21f988754bbf8_home-decoration-collections-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Home Decoration - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="collection-card-details">
+              <h3 class="collection-card-title">Home decoration</h3>
+              <div class="text-arrow-wrapper">
+                <div class="text-50">Browse collection</div>
+                <div
+                  style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                  class="icon-font text-arrow-small"></div>
+              </div>
+            </div>
+          </a><a data-w-id="506ce328-758e-67c0-4ce7-cb5488d574ad"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="/collections/collection-v3" class="card collection-card w-inline-block">
+            <div class="image-wrapper"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610a14a75ec417b988971e4d_storage-and-organizations-collections-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Storage - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="collection-card-details">
+              <h3 class="collection-card-title">Storage &amp; organizations</h3>
+              <div class="text-arrow-wrapper">
+                <div class="text-50">Browse collection</div>
+                <div
+                  style="-webkit-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0px, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                  class="icon-font text-arrow-small"></div>
+              </div>
+            </div>
+          </a></div>
+      </div>
+    </section>
+    <section class="section pd-top-0px wf-section">
+      <div class="container-default w-container">
+        <div data-w-id="b65a8315-1e3d-7d7d-b947-974d25de43c2"
+          style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+          class="w-layout-grid top-content-2-columns">
+          <h2 class="mg-bottom-0">Latest products</h2><a id="w-node-ffec6c4a-1fa6-34d6-6a8a-50a2914ef4e2-e16dafbf"
+            href="/collections/collection-v1" class="button-primary w-button">Browse all</a>
+        </div>
+        <div data-w-id="39a4329e-34a7-89f3-7334-f2e090f68de7"
+          style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+          class="w-dyn-list">
+          <div role="list" class="grid-3-columns w-dyn-items">
+            {% for i in products1 %}
+            <div role="listitem" class="w-dyn-item"><a data-w-id="39a4329e-34a7-89f3-7334-f2e090f68dea"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                href="{% url 'productview' i.id %}" class="card product-card v2 w-inline-block">
+                <div class="image-wrapper product-card v2">
+                  <img
+                    data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_main_image_4dr%22%2C%22to%22%3A%22src%22%7D%5D"
+
+                    src="/media/{{i.image1}}" style="width:500px;height:300px;"
+                    style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                    alt="Lisabo Dinning Table" class="product-card-image" /></div>
+<!--                    sizes="(max-width: 479px) 93vw, (max-width: 767px) 45vw, (max-width: 991px) 46vw, (max-width: 1439px) 30vw, 356px"-->
+<!--                    srcset="{% static 'i.image1.url' %}"-->
+<!--                    class="product-card-image" /></div>-->
+                <div class="product-card-details v2">
+                  <div class="flex product-card-title-and-price">
+                    <h3 class="heading-h5-size product-title v2">{{ i.title }}</h3>
+                    <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
+                      class="product-card-price">$ {{ i.price }} USD</div>
+                  </div>
+                  <p class="product-subtext v2">{{ i.description }}</p>
+                </div>
+              </a></div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="wf-section">
+      <div class="container-default w-container">
+        <div data-w-id="4c8a3a9e-6eb9-92a6-ab98-e4c2c58b3bf6" class="cta-wrapper-v1">
+          <div class="w-layout-grid grid-2-columns cta-v1">
+            <div data-w-id="4c8a3a9e-6eb9-92a6-ab98-e4c2c58b3bf8">
+              <h2 class="color-white">Need assistance?</h2>
+              <p class="color-white">Get in touch to receive free help from our team to create a professional interior
+                design for your home.</p>
+              <div class="mg-top-24px"><a href="/" class="button-primary button-white w-button">Get in touch</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section wf-section">
+      <div class="container-default w-container">
+        <div class="container-inner-590px">
+          <div data-w-id="8ba7296e-ad69-e390-4b93-6114b1e05a9b"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+            class="text-center">
+            <h2>Browse by collection</h2>
+          </div>
+        </div>
+        <div data-w-id="1139c3c4-1725-fa0f-b967-64f9127e9e6f"
+          style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+          class="w-layout-grid grid-4-columns mg-top-40px"><a id="w-node-_813a2b10-90b5-9e69-e26e-e4b9252be30f-e16dafbf"
+            data-w-id="813a2b10-90b5-9e69-e26e-e4b9252be30f"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="https://shopkeepertemplate.webflow.io/category/sofas" class="collection-card-v2 w-inline-block">
+            <div class="image-wrapper br-6px"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2a306c05d19c10a7e46f_sofas-browse-collection-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Sofas - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="mg-top-24px">
+              <h3 style="color:rgb(10,10,10)" class="heading-h4-size collection-card-title">Sofas</h3>
+            </div>
+          </a><a id="w-node-e75ad715-f9be-01da-2299-c48aa982add9-e16dafbf"
+            data-w-id="e75ad715-f9be-01da-2299-c48aa982add9"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="https://shopkeepertemplate.webflow.io/category/decoration" class="collection-card-v2 w-inline-block">
+            <div class="image-wrapper br-6px"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2a309f4a55bf6cf67f9a_counters-browse-collection-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Counters - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="mg-top-24px">
+              <h3 style="color:rgb(10,10,10)" class="heading-h4-size collection-card-title">Counters</h3>
+            </div>
+          </a><a id="w-node-f58f33f7-4bb7-282a-e877-1eb999929963-e16dafbf"
+            data-w-id="f58f33f7-4bb7-282a-e877-1eb999929963"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="https://shopkeepertemplate.webflow.io/category/tables" class="collection-card-v2 w-inline-block">
+            <div class="image-wrapper br-6px"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2a309f4a554bcef67fa6_tables-browse-collection-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Tables - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="mg-top-24px">
+              <h3 style="color:rgb(10,10,10)" class="heading-h4-size collection-card-title">Tables</h3>
+            </div>
+          </a><a id="w-node-_882e983c-2900-18ad-6a2d-1fdecc4dbe58-e16dafbf"
+            data-w-id="882e983c-2900-18ad-6a2d-1fdecc4dbe58"
+            style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+            href="https://shopkeepertemplate.webflow.io/category/chairs" class="collection-card-v2 w-inline-block">
+            <div class="image-wrapper br-6px"><img
+                src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2a308e60333cdbd13c7d_beds-browse-collection-shop-x-webflow-template.jpg"
+                style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
+                alt="Beds - Shopkeeper X Webflow Template" class="collection-card-image" /></div>
+            <div class="mg-top-24px">
+              <h3 style="color:rgb(10,10,10)" class="heading-h4-size collection-card-title">Beds</h3>
+            </div>
+          </a></div>
+      </div>
+    </section>
+    <div data-w-id="bc6b0aba-05e8-826c-2831-d274e615df5a" class="container-default">
+      <div class="divider"></div>
+    </div>
+    <section class="section short wf-section">
+      <div class="container-default w-container">
+        <div data-w-id="d54ccee7-5003-4e61-b23a-6c60d48ee8c1"
+          style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0"
+          class="w-layout-grid grid-3-columns benefits">
+          <div id="w-node-d5f98dd3-cc5c-25ff-9beb-3515ee10f399-e16dafbf" class="flex detail-icon"><img
+              src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2e17f10395dca7f786f4_free-shipping-shop-x-webflow-template.svg"
+              alt="Free Shipping - Shopkeeper X Webflow Template" class="detail-icon-wrapper" />
+            <div class="mg-left-24px mg-top-24-mb">
+              <div class="text-300 color-neutral-800">Free shipping</div>
+              <div>on all orders over $99 USD</div>
+            </div>
+          </div>
+          <div id="w-node-_9c52db7b-7665-5354-6d21-229d59158939-e16dafbf" class="flex detail-icon"><img
+              src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2e17a1ba2e5497faa3f2_secure-payments-shop-x-webflow-template.svg"
+              alt="Secure Payments - Shopkeeper X Webflow Template" class="detail-icon-wrapper" />
+            <div class="mg-left-24px mg-top-24-mb">
+              <div class="text-300 color-neutral-800">Secure payments</div>
+              <div>with credit and debit card</div>
+            </div>
+          </div>
+          <div id="w-node-e3afb520-ebaa-5db8-fa2d-32840cd5d873-e16dafbf" class="flex detail-icon"><img
+              src="https://assets.website-files.com/61003e54d0ee8c281a970a66/610b2e17d5a2590dfab0eb45_30-days-return-shop-x-webflow-template.svg"
+              alt="30 Days Return - Shopkeeper X Webflow Template" class="detail-icon-wrapper" />
+            <div class="mg-left-24px mg-top-24-mb">
+              <div class="text-300 color-neutral-800">30 days return guarantee</div>
+              <div>no questions asked</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+    {% endblock %}

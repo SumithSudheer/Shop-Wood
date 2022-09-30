@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+<div class="center">
+    {% if payment %}
+    <div class="card">
+  <div class="card-body mx-4">
+    <div class="container">
+      <p class="my-5 mx-5" style="font-size: 30px;">Your Choice</p>
+
+      <div class="row text-black">
+        <div class="card-body" style="text-align:center;width:100%">
+              <table style="text-align:center;width:100%">
+
+                    <tr>
+                    <th>ProductName</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                  </tr>
+                    {% for i in cart %}
+                    <tr>
+                    <td>{{ i.product.title }}</td>
+                    <td>{{i.quantity}}</td>
+                    <td>{{i.total_price}}</td>
+                  </tr>
+                    {% endfor %}
+
+                </table>
+              <strong>Total Price : {{t}}</strong>
+          </div>
+
+        <div class="col-xl-12">
+          <p class="float-end fw-bold">Total: ${{ t }}
+          </p>
+        </div>
+        <hr style="border: 2px solid black;">
+      </div>
+
+    </div>
+  </div>
+</div>
+
+    <form class="text-center border border-light p-5" action="{% url 'success' %}" method="POST">
+        {% csrf_token %}
+
+
+
+
+
+
+
+        <button id="rzp-button1">Pay Using Razor Pay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "{{RAZOR_KEY_ID}}",
+    "amount": "{{payment.amount}}",
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{payment.id}}",
+    "callback_url": "{% url 'success' %}",
+    "prefill": {
+        "name": "Sumith",
+        "email": "sumith@example.com",
+        "contact": "9999999999"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+
+    </form>
+    {% endif %}
+
+</div>
+
+
+</div>
+</body>
+</html>
