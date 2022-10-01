@@ -20,12 +20,22 @@ def index(request):
         try:
             user = authenticate(email=email, password=password)
         except:
-            messages.error(request, ("user not found"))
+            if User.objects.get(email=email) is None:
+                messages.error(request, ("Wrong credential"))
+            else:
+                messages.error(request, ("User not found"))
         if user is not None:
             login(request, user)
             return redirect(product.views.product_home)
         else:
-            messages.success(request, ("user not found"))
+            try:
+                user = User.objects.get(email=email)
+            except:
+                user = None
+            if user is None:
+                messages.error(request, ("user not found"))
+            else:
+                messages.success(request, ("Wrong credential"))
     return render(request, 'login.html')
 
 
@@ -82,6 +92,10 @@ def otp_verify(request):
 
 def account_view(request):
     if request.user.is_authenticated:
+        if request.method == 'POST':
+            name = request.POST['name1']
+            User.objects.filter(id=request.user.id).update(name=name)
+            return redirect(account_view)
         return render(request, 'profile.html')
     return redirect(index)
 
@@ -99,6 +113,10 @@ def change_pass(request):
                     u = User.objects.get(id=request.user.id)
                     u.set_password(newpassword)
                     u.save()
+                else:
+                    messages.error(request, ("Enter Valid Details"))
+            else:
+                messages.error(request, ("Password missmatch"))
         return render(request, 'Changepassword.html')
     return redirect(index)
 
@@ -133,9 +151,13 @@ def edit_address(request, id):
         country = request.POST['country']
         state = request.POST['state']
         zip = request.POST['zip']
-        UserAddress.objects.filter(id=id).update(user=request.user, name=name, phone=phone, email=Email,
+        try:
+            UserAddress.objects.filter(id=id).update(user=request.user, name=name, phone=phone, email=Email,
                                                  address1=address1, address2=address2,
                                                  country=country, state=state, zip=zip)
+        except:
+            pass
+        return redirect(address_manage)
     return render(request, 'editaddress.html', context={'ob': ob})
 
 

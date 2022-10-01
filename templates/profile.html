@@ -28,13 +28,22 @@
         <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
           <div class="card-body p-4 p-md-5">
             <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Profile</h3>
+                         {% for message in messages|slice:"0:1" %}
+
+                         <div class="alert alert-warning alert-dismissible fade show">
+                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                {{ message }}
+                        </div>
+
+       {% endfor %}
             <form method="post">
+              {% csrf_token %}
 
               <div class="row">
                 <div class="col-md-6 mb-4">
 
                   <div class="form-outline">
-                    <input type="text" id="firstName" class="form-control form-control-lg" placeholder="{{ request.user.name }}" />
+                    <input type="text" id="firstName" name="name1" class="form-control form-control-lg" placeholder="{{ request.user.name }}" />
                     <label class="form-label" for="firstName">Name</label>
                   </div>
 
