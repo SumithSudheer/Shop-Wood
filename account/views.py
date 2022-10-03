@@ -1,6 +1,7 @@
-
 import random
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from twilio.rest import Client
@@ -9,8 +10,9 @@ import product.views
 from django.conf import settings
 from .models import User, UserAddress
 
-num1 = 0
-phone = 0
+# num1 = 0
+# phone = 0
+# email = None
 
 
 def index(request):
@@ -41,19 +43,26 @@ def index(request):
 
 def signup(request):
     if request.method == 'POST':
+
         try:
             password = request.POST['password']
             email = request.POST['email']
-            phone = request.POST['phonenumber']
+
+
             name = request.POST['name']
             try:
-                user = User.objects.create_user(email=email, password=password, phone=phone, name=name)
-                return redirect(login)
+                if not request.POST['phonenumber']:
+                    print('hello')
+                    user = User.objects.create_user(email=email, password=password, phone=None, name=name)
+                else:
+                    print('hi')
+                    user = User.objects.create_user(email=email, password=password, phone=request.POST['phonenumber'], name=name)
+                return redirect(index)
             except:
                 if User.objects.get(email=email) is not None:
                     messages.error(request, ("email already exist"))
 
-                elif User.objects.get(phone=phone) is not None:
+                elif User.objects.get(phone=phone) is not None and phone is not None:
                     messages.error(request, ("phone already exist"))
                 else:
                     messages.error(request, ("Enter Valid Details"))
@@ -63,30 +72,66 @@ def signup(request):
 
 
 def otp(request):
-    global num1
-    global phone
+    num1 = request.session['num1'] = 0
+    request.session['phone'] = 0
+    email = request.session['email'] = None
     if request.method == 'POST':
         phone = request.POST['phone']
+        email = request.POST['email']
         num1 = random.randint(1000, 9999)
-        client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
-        message = client.messages.create(
-            body='otp : ' + str(num1),
-            from_='[+][1][5626627540]',
-            to='[+][91]' + str([phone])
-        )
+        request.session['num1'] = num1
+        if 'emailbtn' in request.POST:
+            request.session['email']=email
+            try:
+                user = User.objects.get(email=email)
+            except:
+                messages.error(request, ("Email Doesnt exist"))
+                return redirect(otp)
+
+            request.session['phone'] = 0
+            send_mail(
+                'OTP',
+                'Your Otp For Login' + str(num1),
+                settings.EMAIL_HOST_USER,
+                [email],
+                fail_silently=False,
+            )
+
+        else:
+            try:
+                client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+                message = client.messages.create(
+                    body='otp : ' + str(num1),
+                    from_='[+][1][5626627540]',
+                    to='[+][91]' + str([phone])
+                )
+            except:
+                messages.error(request, ("Something went Wrong"))
+            email = None
         return redirect(otp_verify)
     return render(request, 'otp_login.html')
 
 
 def otp_verify(request):
-    global num1
+    num1 = request.session['num1']
     if request.method == 'POST':
         otp = request.POST['otp']
-        user = User.objects.get(phone=phone)
+        print(num1)
+        if request.session['phone'] == 0:
+            print('1')
+
+            user = User.objects.get(email=request.session['email'])
+
+        else:
+            print('2')
+            user = User.objects.get(phone=request.session['phone'])
 
         if int(num1) == int(otp):
             login(request, user)
             return redirect(product.views.product_home)
+        else:
+            messages.error(request, ("Wrong OTP"))
+
     return render(request, 'otpconfirm.html')
 
 
@@ -94,7 +139,13 @@ def account_view(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
             name = request.POST['name1']
+            phone = request.POST['phone']
             User.objects.filter(id=request.user.id).update(name=name)
+            try:
+                if request.POST['phone']:
+                    User.objects.filter(id=request.user.id).update(phone=phone)
+            except IntegrityError:
+                messages.error(request, ("phone already exist"))
             return redirect(account_view)
         return render(request, 'profile.html')
     return redirect(index)
@@ -108,15 +159,17 @@ def change_pass(request):
             newpassword = request.POST['newpassword']
             confirmpassword = request.POST['confirmpassword']
             p = check_password(password, request.user.password)
-            if newpassword == confirmpassword:
-                if p:
+
+            if p:
+                if newpassword == confirmpassword:
                     u = User.objects.get(id=request.user.id)
                     u.set_password(newpassword)
                     u.save()
                 else:
-                    messages.error(request, ("Enter Valid Details"))
+                    messages.error(request, ("Password missmatch"))
             else:
-                messages.error(request, ("Password missmatch"))
+                messages.error(request, ("Enter Valid Details"))
+
         return render(request, 'Changepassword.html')
     return redirect(index)
 
@@ -153,8 +206,8 @@ def edit_address(request, id):
         zip = request.POST['zip']
         try:
             UserAddress.objects.filter(id=id).update(user=request.user, name=name, phone=phone, email=Email,
-                                                 address1=address1, address2=address2,
-                                                 country=country, state=state, zip=zip)
+                                                     address1=address1, address2=address2,
+                                                     country=country, state=state, zip=zip)
         except:
             pass
         return redirect(address_manage)
@@ -165,5 +218,3 @@ def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
         return redirect(product.views.product_home)
-
-

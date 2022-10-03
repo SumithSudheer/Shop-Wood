@@ -17,7 +17,7 @@ from django.views.decorators.cache import never_cache
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
-
+from django.contrib import messages
 
 def product_home(request):
     products = Product.objects.all().values('title', 'description', 'price', 'inventory', 'image1', 'id')[0:3]
@@ -197,14 +197,15 @@ def remove_cart(request, id):
 
 def check_out(request):
     s = None
+
     if request.user.is_authenticated:
         t = int(float(request.session['t']))
         cart = CartItem.objects.filter(user_id=request.user.id)
         ob = UserAddress.objects.filter(user=request.user)
-        k = []
+        kart = []
         for i in cart:
-            k.append({'id': i.id, 'unit_price': i.unit_price,
-                      'offer': i.total_price - i.product.category.offer % i.total_price, 'quantity': i.quantity,
+            kart.append({'id': i.id, 'unit_price': i.unit_price,
+                      'offer': (i.total_price - (i.product.category.offer * i.total_price)/100), 'quantity': i.quantity,
                       'total_price': i.total_price, 'product_title': i.product.title,
                       'product_description': i.product.description, 'product_image': i.product.image1})
 
@@ -263,8 +264,9 @@ def check_out(request):
                                           address1=adds.address1, address2=adds.address2, country=adds.country,
                                           state=adds.state, zip=adds.zip, user=request.user, order=order)
                     add.save()
-                    CartItem.objects.filter(id=i.id).delete()
+
                 else:
+                    messages.error(request, ("Product is Out Of Stock"))
                     return redirect(check_out)
             k = int(t * 100)
             # Razor Pay
@@ -280,8 +282,9 @@ def check_out(request):
                     request.session['payment'] = payment
                     payment_status = payment['status']
                     if payment_status == 'created':
+                        print('hello')
                         return render(request, "razor.html",
-                                      {'payment': payment, 't': t, "cart": cart, 'RAZOR_KEY_ID': settings.RAZOR_KEY_ID})
+                                      {'payment': payment, 't': t, "cart": cart, 'kart': kart, 'RAZOR_KEY_ID': settings.RAZOR_KEY_ID})
 
                 j = {'k': k}
             if payment_method == 'PAYPAL':
@@ -290,7 +293,7 @@ def check_out(request):
 
             return redirect(products)
 
-        return render(request, 'checkout.html', context={'ob': ob, 'cart': cart, 't': t, 'k': k, 's': s})
+        return render(request, 'checkout.html', context={'ob': ob, 'cart': cart, 't': t, 'k': kart, 's': s})
 
 
 @csrf_exempt
@@ -319,6 +322,7 @@ def success(request):
     client = razorpay.Client(auth=("rzp_test_Nf4iy5nJpLvtmt", "Y2D6cZPsAz452WAVT8VpDTM1"))
     try:
         client.utility.verify_payment_signature(params_dict)
+        CartItem.objects.filter(user=request.user).delete()
 
         return render(request, 'success.html',
                       context={'status': True, 'adds': adds, 'cart': cart, 'total': total, 'order_ins': order_ins,
@@ -345,6 +349,7 @@ def successp(request):
     order_id_main = request.session['order_id_main']
     order_ins = Order.objects.filter(order_id=order_id_main)
     pay = Payment.objects.filter(order_id=order_id_main)
+    CartItem.objects.filter(user=request.user).delete()
 
     return render(request, 'psuccess.html',
                   context={'status': True, 'adds': adds, 'cart': cart, 'total': total, 'order_ins': order_ins,

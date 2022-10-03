@@ -42,13 +42,13 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser):
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, null=True)
     email = models.EmailField(max_length=225, unique=True)
     active = models.BooleanField(default=True)
     superuser = models.BooleanField(default=False)
     staff = models.BooleanField(default=False)
     date_joined = models.TimeField(auto_now_add=True)
-    phone = models.CharField(max_length=10, unique=True)
+    phone = models.CharField(max_length=10, unique=True, null=True)
 
     USERNAME_FIELD = 'email'
 

@@ -61,8 +61,8 @@
       data-w-id="58db7844-5919-d71b-dd74-2323ed8dffe9" data-easing="ease" data-easing2="ease" role="banner"
       class="header w-nav">
 
-     <div class="container-default w-container col-lg-12">
-        <div class="header-wrapper " >
+     <div class="container-default w-container">
+        <div class="header-wrapper">
           <div class="split-content header-right"><a href="/" class="w-nav-brand"><img
                 src="https://assets.website-files.com/61003e54d0ee8c281a970a66/612867872e4cd207afee36c1_logo-shopkeeper-x-webflow-template.svg"
                 alt="Shopkeeper X Webflow Template - Logo" class="header-logo" /></a>
@@ -95,14 +95,51 @@
                 <li class="nav-item-wrapper">
 
                       {% if request.user.is_authenticated %}
+                      {% if request.path == '/account/user/' %}
+
+                  <div data-hover="true" data-delay="0" data-w-id="3184d1c8-0cdd-3f6d-661b-dd13e10bf198"
+                    class="dropdown w-dropdown">
+                    <div class="dropdown-toggle w-dropdown-toggle">
+                      <div>Account</div>
+                      <div class="icon-font dropdown-chevron"></div>
+                    </div>
+                    <nav class="dropdown-list-wrapper w-dropdown-list">
+                      <div class="dropdown-list products">
+                        <div class="dropdown-menu-title">Account</div>
+                        <div class="w-layout-grid grid-2-columns"><a data-w-id="5ea1557d-5c11-9e9a-2cad-2280773881e2"
+                            href="{% url 'address' %}" class="collection-item-wrapper w-inline-block" >
+
+                            <div class="collection-details-wrapper">
+                              <div class="text-200 bold">Address</div>
+                              <div class="text-arrow-wrapper">
+
+                              </div>
+                            </div>
+                          </a><a data-w-id="3d9e2ea0-b51e-73a5-6e96-d9f6c95fa150" href="{% url 'changepass' %}"
+                            class="collection-item-wrapper w-inline-block">
+
+                            <div class="collection-details-wrapper">
+                              <div class="text-200 bold">Change Password</div>
+                              <div class="text-arrow-wrapper">
+
+                              </div>
+                            </div>
+                          </a>
+                         </div>
+                      </div>
+                    </nav>
+                  </div>
+                  {% else %}
                             <a href="{% url 'user' %}" class="nav-link">Account</a>
 
                             {% endif %}
+                  {% endif %}
 
 
 
 
                 </li>
+
               </ul>
             </nav>
           </div>
@@ -253,4 +290,16 @@
           </div>
         </div>
       </div>
-     </div></div></div></body></html>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+

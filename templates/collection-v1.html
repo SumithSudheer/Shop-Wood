@@ -6,6 +6,7 @@
 
 
       {% block content %}
+</div>
         <section class="section hero-home-v1 wf-section">
             <div class="container-default w-container">
                 <div data-w-id="d58256b8-cf1e-d7ea-4dde-efb457077c7e" style="opacity:0"
@@ -60,7 +61,7 @@
                                                     </div>
                                             <div>
                                                 <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
-                                                    class="blog-card-date sidebar">$ {{ i.price }} INR</div>
+                                                    class="blog-card-date sidebar">₹ {{ i.price }} INR</div>
                                                 <h4 class="heading-h5-size mg-bottom-0">{{ i.title }}</h4>
                                             </div>
                                         </a></div>
@@ -87,7 +88,7 @@
                                     <div class="product-card-details v6">
                                         <div class="flex product-card-price-wrapper">
                                             <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
-                                                class="product-card-price v6">$ {{ i.price }} USD</div>
+                                                class="product-card-price v6">₹ {{ i.price }} INR</div>
                                         </div>
                                         <h2 style="color:rgb(10,10,10)" class="heading-h5-size product-title">{{ i.title }}</h2>
                                         <div class="add-to-cart-wrapper v6">
@@ -163,7 +164,7 @@
                                             class="card product-card v7 w-inline-block">
                                             <div class="product-card-details v7">
                                                 <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
-                                                    class="product-card-price v4">$ {{ i.price }} USD</div>
+                                                    class="product-card-price v4">₹ {{ i.price }} INR</div>
                                                 <h3 class="product-card-title">{{ i.title }}</h3>
                                                 <p class="product-subtext v7">{{ i.description }}</p>
                                                 <div class="button-primary product-card-v7">Add to cart</div>
