@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.utils.datastructures import MultiValueDictKeyError
 from account.models import UserAddress
 from product.models import Product, Category, Coupons
-from .models import CartItem
+from .models import CartItem, Guest_Cart
 from account.views import index
 from django.contrib.postgres.search import SearchVector
 from order.models import Order, Billing_address, Payment
@@ -18,8 +18,17 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
+import pickle
 
 def product_home(request):
+    if request.user.is_authenticated:
+        count = CartItem.objects.filter(user_id=request.user.id).count()
+    else:
+        if not request.session.session_key:
+            request.session.create()
+        request.session['guest_key']=request.session.session_key
+        count = Guest_Cart.objects.filter(user_ref=request.session.session_key).count()
+    request.session['count'] = count
     products = Product.objects.all().values('title', 'description', 'price', 'inventory', 'image1', 'id')[0:3]
     products1 = Product.objects.all().values('title', 'description', 'price', 'inventory', 'image1', 'id')[0:6]
     return render(request, 'home-v1.html', context={'products': products, 'products1': products1})
@@ -46,6 +55,26 @@ def productview(request, id):
             CartItem.objects.filter(product=id, user=request.user.id).update(
                 quantity=int(quantity) + int(cart_temp.quantity),
                 total_price=product.price * (int(quantity) + int(cart_temp.quantity)))
+    elif request.method == 'POST':
+        if not request.session.session_key:
+            request.session.create()
+        request.session['guest_key']=request.session.session_key
+        cid = request.POST['cid']
+        guest_cart = Guest_Cart.objects.filter(user_ref=request.session['guest_key'],product=cid)
+
+        quantity = request.POST['commerce-add-to-cart-quantity-input']
+        if not guest_cart:
+            product = Product.objects.get(id=cid)
+            g_c = Guest_Cart(product=product,unit_price=product.price, quantity=quantity,
+                               total_price=product.price * int(quantity),user_ref=request.session['guest_key'])
+            g_c.save()
+        else:
+            guest_cart1 = Guest_Cart.objects.get(user_ref=request.session['guest_key'], product=cid)
+            Guest_Cart.objects.filter(user_ref=request.session['guest_key'], product=cid).update(quantity=int(quantity)+int(guest_cart1.quantity))
+
+
+
+
     product_list = []
     for i in product_test:
         product_list.append({'title': i.title, 'description': i.description, 'image1': i.image1, 'price': i.price,
@@ -60,6 +89,7 @@ def productview(request, id):
 
 @csrf_exempt
 def products(request):
+    request.session['price_filter'] = 'False'
     category = Category.objects.values('name', 'id').order_by('id')
     product1 = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1')
     text = request.GET.get('search')
@@ -75,7 +105,28 @@ def products(request):
         return render(request, 'collection-v1.html',
                       context={'page_obj': page_obj, 'category': category, 'product1': product1,
                                'product_view': product_view})
-    product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1')
+    if request.method=='POST':
+        if 'price_filter' in request.POST:
+            min = request.POST['price-min']
+            max = request.POST['price-max']
+            request.session['min']=min
+            request.session['max']=max
+            request.session['price_filter']='True'
+            product = Product.objects.filter(price__lte=max,price__gte=min).values('id', 'title', 'description', 'price', 'inventory', 'image1')
+            # return redirect(products)
+            table1 = Paginator(product, 6)
+            page_number = request.GET.get('page')
+            page_obj = table1.get_page(page_number)
+            product_view = request.path
+            return render(request, 'collection-v1.html',
+                          context={'page_obj': page_obj, 'category': category, 'product1': product1,
+                                   'product_view': product_view})
+    if request.session['price_filter']=='True':
+        max=request.session['max']
+        min=request.session['min']
+        product = Product.objects.filter(price__lte=max, price__gte=min).values('id', 'title', 'description', 'price', 'inventory', 'image1')
+    else:
+         product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1')
     table1 = Paginator(product, 6)
     page_number = request.GET.get('page')
     page_obj = table1.get_page(page_number)
@@ -120,79 +171,117 @@ def addtocart(request, id):
         cat_itm.save()
         return redirect(viewCart)
     else:
+        quantity = 1
+        product = Product.objects.get(id=id)
+        g_cart= Guest_Cart(product=product, unit_price=product.price, total_price=product.price * quantity).save()
         return redirect(index)
 
 
 def viewCart(request):
     if request.user.is_authenticated:
         cart = CartItem.objects.filter(user_id=request.user.id).order_by('-created_at')
-        print(cart)
+        count = CartItem.objects.filter(user_id=request.user.id).count()
+        request.session['count']=count
+
         k = []
         for i in cart:
             k.append({'id': i.id, 'unit_price': i.unit_price,
                       'offer': (i.total_price - (i.product.category.offer * i.total_price) / 100),
                       'quantity': i.quantity, 'total_price': i.total_price, 'product_title': i.product.title,
                       'product_description': i.product.description, 'product_image': i.product.image1})
-        if request.method == 'POST':
-            name = request.POST['Name']
-            phone = request.POST['phone']
-            email = request.POST['email']
-            address = request.POST['address']
-            address2 = request.POST['address2']
-            country = request.POST['country']
-            state = request.POST['state']
-            zip = request.POST['zip']
-            payment_method = request.POST['paymentMethod']
-            for i in cart:
-                order = Order(user=request.user, product=i.product_id, purchase_price=i.unit_price, quantity=i.quantity,
-                              total_price=i.total_price, payment_method="1")
-                order.save()
-                Product.objects.filter(id=i.product_id).update(inventory=i.product_id.inventory - i.quantity)
-                add = Billing_address(name=name, phone=phone, email=email, address=address, address2=address2,
-                                      country=country, state=state, zip=zip, user=request.user, order=order)
-                add.save()
 
         cart1 = []
         total_amount = 0
         for i in k:
             total_amount += i['offer']
         request.session['t'] = str(total_amount)
-        return render(request, 'Cart.html', context={'cart': cart, 'total_amount': total_amount, 'k': k})
+        return render(request, 'Cart.html', context={'cart': cart, 'total_amount': total_amount, 'k': k, 'count':count})
     else:
+        if not request.session.session_key:
+            request.session.create()
+        cart = Guest_Cart.objects.filter(user_ref=request.session.session_key).order_by('-created_at')
+        count = Guest_Cart.objects.filter(user_ref=request.session.session_key).count()
+        k = []
+        for i in cart:
+            k.append({'id': i.id, 'unit_price': i.unit_price,
+                      'offer': ((i.unit_price * i.quantity) - (i.product.category.offer * i.total_price) / 100),
+                      'quantity': i.quantity, 'total_price': i.unit_price*i.quantity, 'product_title': i.product.title,
+                      'product_description': i.product.description, 'product_image': i.product.image1})
+        cart1 = []
+        total_amount = 0
+        for i in k:
+            total_amount = total_amount + (i['offer'])
+        request.session['t'] = str(total_amount)
+        return render(request, 'Cart.html', context={'cart': cart, 'total_amount': total_amount, 'k': k, 'count':count})
         return redirect(index)
 
 
 @never_cache
 def iquantity_cart(request, id):
-    cart = CartItem.objects.get(id=id)
-    if cart.product.inventory > cart.quantity:
-        q = cart.quantity + 1
-        CartItem.objects.filter(id=id).update(quantity=cart.quantity + 1)
+    if request.user.is_authenticated:
         cart = CartItem.objects.get(id=id)
-        t = cart.unit_price * cart.quantity
-        CartItem.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
-    return redirect(viewCart)
+        if cart.product.inventory > cart.quantity:
+            q = cart.quantity + 1
+            CartItem.objects.filter(id=id).update(quantity=cart.quantity + 1)
+            cart = CartItem.objects.get(id=id)
+            t = cart.unit_price * cart.quantity
+            CartItem.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
+            count = CartItem.objects.filter(user_id=request.user.id).count()
+            request.session['count'] = count
+        return redirect(viewCart)
+    else:
+        cart = Guest_Cart.objects.get(id=id)
+        if cart.product.inventory > cart.quantity:
+            q = cart.quantity + 1
+            Guest_Cart.objects.filter(id=id).update(quantity=cart.quantity + 1)
+            cart = Guest_Cart.objects.get(id=id)
+            t = cart.unit_price * cart.quantity
+            Guest_Cart.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
+        return redirect(viewCart)
 
 
 @never_cache
 def dquantity_cart(request, id):
-    cart = CartItem.objects.get(id=id)
-    if cart.quantity == 1:
-        return remove_cart(request, id=id)
-
-    if 0 < cart.quantity:
-        q = cart.quantity - 1
-
-        CartItem.objects.filter(id=id).update(quantity=cart.quantity - 1)
+    if request.user.is_authenticated:
         cart = CartItem.objects.get(id=id)
-        t = cart.unit_price * cart.quantity
-        CartItem.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
-    return redirect(viewCart)
+        if cart.quantity == 1:
+            return remove_cart(request, id=id)
+
+        if 0 < cart.quantity:
+            q = cart.quantity - 1
+
+            CartItem.objects.filter(id=id).update(quantity=cart.quantity - 1)
+            cart = CartItem.objects.get(id=id)
+            t = int(cart.unit_price) * int(cart.quantity)
+            CartItem.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
+            count = CartItem.objects.filter(user_id=request.user.id).count()
+            request.session['count'] = count
+        return redirect(viewCart)
+    else:
+        cart = Guest_Cart.objects.get(id=id)
+        if cart.quantity == 1:
+            return remove_cart(request, id=id)
+
+        if 0 < cart.quantity:
+            q = cart.quantity - 1
+
+            Guest_Cart.objects.filter(id=id).update(quantity=cart.quantity - 1)
+            cart = Guest_Cart.objects.get(id=id)
+            t = int(cart.unit_price) * int(cart.quantity)
+            Guest_Cart.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
+        return redirect(viewCart)
 
 
 def remove_cart(request, id):
-    CartItem.objects.get(id=id).delete()
-    return redirect(viewCart)
+    if request.user.is_authenticated:
+        CartItem.objects.get(id=id).delete()
+        count = CartItem.objects.filter(user_id=request.user.id).count()
+        request.session['count'] = count
+        return redirect(viewCart)
+    else:
+        Guest_Cart.objects.get(id=id).delete()
+        return redirect(viewCart)
+
 
 
 def check_out(request):
@@ -282,7 +371,6 @@ def check_out(request):
                     request.session['payment'] = payment
                     payment_status = payment['status']
                     if payment_status == 'created':
-                        print('hello')
                         return render(request, "razor.html",
                                       {'payment': payment, 't': t, "cart": cart, 'kart': kart, 'RAZOR_KEY_ID': settings.RAZOR_KEY_ID})
 
@@ -294,6 +382,7 @@ def check_out(request):
             return redirect(products)
 
         return render(request, 'checkout.html', context={'ob': ob, 'cart': cart, 't': t, 'k': kart, 's': s})
+    return redirect(index)
 
 
 @csrf_exempt

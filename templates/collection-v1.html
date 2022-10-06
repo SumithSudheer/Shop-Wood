@@ -31,7 +31,9 @@
                     <div class="sidebar-container">
                         <div data-w-id="00932b4c-a047-a16a-55d9-aa2b0acb1f6c" class="card sidebar">
                             <h3>Sort by</h3>
+
                             <div class="sidebar-categories-wrapper last">
+
                                 <div class="heading-h4-size mg-bottom-20px">Category</div>
                                 <ul role="list" class="links-list">
                                     {% for i in category %}
@@ -44,6 +46,23 @@
                                     {% endfor %}
 
                                 </ul>
+                            </div>
+                        </div>
+                         <div data-w-id="00932b4c-a047-a16a-55d9-aa2b0acb1f6c" class="card sidebar">
+                            <h3>Sort by</h3>
+
+                            <div class="sidebar-categories-wrapper last">
+
+                                <div class="heading-h4-size mg-bottom-20px">Price</div>
+                               <form method="POST" >
+                                   <label>Min Price</label>
+
+                                   <input type="number" name="price-min"  min="0" {% if request.session.price_filter == 'True' %}  value="{{request.session.min}}" placeholder="{{request.session.min}}" {% endif %}/>
+
+                                   <label>Max Price</label>
+                                   <input type="number" name="price-max" min="0"{% if request.session.price_filter == 'True' %}  value="{{request.session.max}}" placeholder="{{request.session.max}}" {% endif %}/>
+                                   <button type="submit" name="price_filter">Filter</button>
+                               </form>
                             </div>
                         </div>
                         <div data-w-id="00932b4c-a047-a16a-55d9-aa2b0acb1fa7" class="card sidebar last">

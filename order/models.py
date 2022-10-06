@@ -34,7 +34,7 @@ class Order(models.Model):
     delivery_status = models.CharField(max_length=200, choices=delivery_status_choice, default="P")
     status = models.BooleanField(default=True)
     order_at = models.DateTimeField(auto_now_add=True )
-    order_id = models.CharField(max_length=200, default=None, unique=True)
+    order_id = models.CharField(max_length=200, default=None)
 
 
 
@@ -49,7 +49,7 @@ class Billing_address(models.Model):
     zip = models.IntegerField()
     user = models.ForeignKey(User,on_delete=models.CASCADE, null=False)
     order = models.OneToOneField(Order, on_delete=models.PROTECT)
-    order_id_Ref = models.CharField(max_length=200, default=None, unique=True)
+    order_id_Ref = models.CharField(max_length=200, default=None)
 
 
 class Payment(models.Model):

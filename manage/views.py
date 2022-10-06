@@ -10,6 +10,8 @@ from product.forms import *
 from django.core.paginator import Paginator
 from django.contrib.postgres.search import SearchVector
 from django.db.models import Sum
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
 
 
 # Create your views here.
@@ -337,7 +339,13 @@ def sales_report(request):
     order_count = Order.objects.all().count()
     product_count = product.count()
     payment = Payment.objects.all()
+
+    abel = Order.objects.filter(order_at__year=2022)
+    abel2 = Order.objects.values('order_at','order_id','total_price','delivery_status').annotate(month=TruncMonth('order_at')).values('month','order_at','order_id','total_price','delivery_status').annotate(c=Count('id')).values('month','c','order_at','order_id','total_price','delivery_status')
+    lol=[]
+    for i in abel2:
+        lol.append({'order_id':i['order_id'],'delivery_status':i['delivery_status'],'month':i['month'].month,'year':i['month'].year,'total_price':i['total_price']})
     return render(request, 'salesreport.html',
                   context={'monthly': monthly, 'yearly': yearly, 'monthly_sales': monthly_sales,
                            'weekly_sales': weekly_sales, 'user_count': user_count, 'total_income': total_income,
-                           'order_count': order_count, 'product_count': product_count, 'payment': payment})
+                           'order_count': order_count, 'product_count': product_count, 'payment': payment, 'lol':lol})

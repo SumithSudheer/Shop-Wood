@@ -9,6 +9,7 @@ from django.contrib.auth.hashers import check_password
 import product.views
 from django.conf import settings
 from .models import User, UserAddress
+from product.models import Guest_Cart, CartItem
 
 # num1 = 0
 # phone = 0
@@ -27,6 +28,21 @@ def index(request):
             else:
                 messages.error(request, ("User not found"))
         if user is not None:
+            if 'guest_key' in request.session:
+                p = request.session['guest_key']
+                guest_cart = Guest_Cart.objects.filter(user_ref=p)
+                login(request, user)
+                for i in guest_cart:
+                    try:
+                        cart = CartItem.objects.get(user=request.user, product=i.product)
+                    except:
+                        cart = None
+                    if cart:
+                        CartItem.objects.filter(user=request.user, product=i.product).update(quantity=cart.quantity+i.quantity)
+                    else:
+                        k = CartItem(user=request.user,product=i.product,quantity=i.quantity,total_price=i.total_price,unit_price=i.unit_price)
+                        k.save()
+                return redirect(product.views.product_home)
             login(request, user)
             return redirect(product.views.product_home)
         else:
@@ -52,17 +68,14 @@ def signup(request):
             name = request.POST['name']
             try:
                 if not request.POST['phonenumber']:
-                    print('hello')
                     user = User.objects.create_user(email=email, password=password, phone=None, name=name)
                 else:
-                    print('hi')
                     user = User.objects.create_user(email=email, password=password, phone=request.POST['phonenumber'], name=name)
                 return redirect(index)
             except:
                 if User.objects.get(email=email) is not None:
                     messages.error(request, ("email already exist"))
-
-                elif User.objects.get(phone=phone) is not None and phone is not None:
+                elif User.objects.get(phone=request.POST['phonenumber']) is not None and request.POST['phonenumber'] is not None:
                     messages.error(request, ("phone already exist"))
                 else:
                     messages.error(request, ("Enter Valid Details"))
@@ -91,7 +104,7 @@ def otp(request):
             request.session['phone'] = 0
             send_mail(
                 'OTP',
-                'Your Otp For Login' + str(num1),
+                'Your Otp For Login : ' + str(num1),
                 settings.EMAIL_HOST_USER,
                 [email],
                 fail_silently=False,
@@ -107,6 +120,7 @@ def otp(request):
                 )
             except:
                 messages.error(request, ("Something went Wrong"))
+                return redirect(otp)
             email = None
         return redirect(otp_verify)
     return render(request, 'otp_login.html')
@@ -116,14 +130,11 @@ def otp_verify(request):
     num1 = request.session['num1']
     if request.method == 'POST':
         otp = request.POST['otp']
-        print(num1)
         if request.session['phone'] == 0:
-            print('1')
 
             user = User.objects.get(email=request.session['email'])
 
         else:
-            print('2')
             user = User.objects.get(phone=request.session['phone'])
 
         if int(num1) == int(otp):

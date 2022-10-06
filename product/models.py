@@ -17,7 +17,7 @@ class Category(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=250, unique=True)
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     inventory = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='category')
     image1 = models.ImageField(upload_to="project1/media/image/")
@@ -34,6 +34,15 @@ class CartItem(models.Model):
     total_price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     # cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=datetime.now, blank=True)
+
+class Guest_Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='productguest')
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    quantity = models.IntegerField(default=1)
+    total_price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    # cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    user_ref = models.CharField(max_length=200)
     created_at = models.DateTimeField(default=datetime.now, blank=True)
 
 

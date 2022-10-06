@@ -146,78 +146,139 @@
             <div class="col-md-12 my-4">
         <div class="bg-white">
             <div class="card-body" style="text-align:center;">
-                <table class="container table" id="table" hidden>
+                <table class="container table" id="table" >
                     <thead>
 
                     <tr>
-    <th>Name</th>
-    <th>Payment ID</th>
-    <th>Order ID</th>
-    <th>Ordered At</th>
+    <th>OrderID</th>
+    <th>DeliveryStatus</th>
+    <th>MONTH</th>
+    <th id="col_3">YEAR</th>
     <th>Amount Paid</th>
-
-    <th>Payment Method</th>
   </tr>
                     </thead>
                     <tbody>
-                    {% for i in payment %}
+                    {% for i in lol %}
   <tr>
-    <td>{{ i.user.name }}</td>
-    <td>{{i.payment_id}}</td>
-    <td>{{i.order_id}}</td>
-    <td>{{i.created_at}}</td>
-    <td>{{i.amount_paid}}</td>
-
-    <td>{{i.payment_method}}</td>
+    <td>{{ i.order_id }}</td>
+    <td>{{i.delivery_status}}</td>
+    <td>{{i.month}}</td>
+    <td>{{i.year}}</td>
+    <td>{{i.total_price}}</td>
 
   </tr>
 
                     {% endfor %}
                     </tbody>
+                    <tfoot>
+            <tr>
+               <th>OrderID</th>
+    <th>DeliveryStatus</th>
+    <th>MONTH</th>
+    <th >YEAR</th>
+    <th>Amount Paid</th>
+            </tr>
+        </tfoot>
                 </table>
-                                                 <script type="text/javascript" charset="utf8"
-                src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
-                <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-                <script src="
-                https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js
-                "></script>
-                <script src="
-                https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js
-                "></script>
-                <script src="
-                https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js
-                "></script>
-                <script src="
-                https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js
-                "></script>
-                <script src="
-                https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js
-                "></script>
+<!--                                                 <script type="text/javascript" charset="utf8"-->
+<!--                src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>-->
+<!--                <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>-->
+<!--                <script src="-->
+<!--                https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js-->
+<!--                "></script>-->
+<!--                <script src="-->
+<!--                https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js-->
+<!--                "></script>-->
+<!--                <script src="-->
+<!--                https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js-->
+<!--                "></script>-->
+<!--                <script src="-->
+<!--                https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js-->
+<!--                "></script>-->
+<!--                <script src="-->
+<!--                https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js-->
+<!--                "></script>-->
+
+                <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="
+  https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js
+      "></script>
+    <script src="
+  https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js
+      "></script>
+    <script src="
+  https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js
+      "></script>
+    <script src="
+  https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js
+      "></script>
+    <script src="
+  https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js
+      "></script>
+
                 <script>
-                  $(function () {
-                    $('#table').DataTable({
-                      dom: 'Bfrtip',
-                      buttons: [
-                        'copy', 'csv', 'excel', 'pdf', 'print'
-                      ],
-                      "ordering":false
+      $(document).ready(function () {
+        // Setup - add a text input to each footer cell
+        $('#table tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        });
+
+        // DataTable
+        var table = $('#table').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+          ],
+            initComplete: function () {
+                // Apply the search
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var that = this;
+
+                        $('input', this.footer()).on('keyup change clear', function () {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
                     });
-                  });
-                </script>
+            },
+        });
+    });
+    </script>
+
+
+
+
+<!--                <script>-->
+<!--                  $(function () {-->
+<!--                    $('#table').DataTable({-->
+<!--                      dom: 'Bfrtip',-->
+<!--                      buttons: [-->
+<!--                        'copy', 'csv', 'excel', 'pdf', 'print'-->
+<!--                      ],-->
+<!--                      "ordering":false-->
+<!--                    });-->
+<!--                  });-->
+<!--                </script>-->
+
                 <script>
                     const element = document.getElementById("table_filter");
                     element.style.visibility= "hidden";
                 </script>
                 <style>
-    .dataTables_filter{
-    visibility:hidden;
-    }
-    .dataTables_info{
-    visibility:hidden;
-    }
-    .dataTables_paginate{
-    visibility:hidden;
-    }
+<!--    .dataTables_filter{-->
+<!--    visibility:hidden;-->
+<!--    }-->
+<!--    .dataTables_info{-->
+<!--    visibility:hidden;-->
+<!--    }-->
+<!--    .dataTables_paginate{-->
+<!--    visibility:hidden;-->
+<!--    }-->
       .buttons-copy{
         background: aqua;
         color: white;

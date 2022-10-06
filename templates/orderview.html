@@ -48,7 +48,7 @@
                             <div class="invoice-from">
                                 <ul class="list-unstyled text-right">
                                     <li><strong>Invoiced To</strong></li>
-                                    {% for i in adds  %}
+                                    {% for i in adds|slice:":1"  %}
                                     <li>  {{ i.name }}</li>
                                     <li> {{ i.address1}} {{ i.address2 }}</li>
                                     <li>  {{ i.country }},   {{ i.state }}</li>
