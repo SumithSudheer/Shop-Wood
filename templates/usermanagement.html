@@ -31,10 +31,34 @@
                   <td>{{ i.name }}</td>
                   <td>{{ i.email }}</td>
                   <td>{{ i.phone }}</td>
-                  <td>{% if i.active %}<a class="text-white bg-success" style="text-decoration: none;" href="{% url 'block_user' i.id %} " onclick="return confirm('Are you sure You want to block {{ i.name }}?')">Block</a>{% else %}
-                      <a class="text-white bg-danger" style="text-decoration: none;" href="{% url 'block_user' i.id %}" onclick="return confirm('Are you sure You want to unblock {{ i.name }}? ')">UnBlock</a>{% endif %}</td>
+                  <td>{% if i.active %} <button type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hello{{i.id}}">Block</button> {% else %}
+                      <button type="button"  class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#hello{{i.id}}">UnBlock</button>{% endif %}</td>
 
                 </tr>
+
+                <div class="modal fade" id="hello{{i.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Are You Sure You Want to {% if i.active %} Block {% else %} Unblock {% endif %} {{i.name}} ?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          {% if i.active %}
+                          <a class="text-white bg-success" style="text-decoration: none;" href="{% url 'block_user' i.id %} "><button type="button" class="btn btn-primary">Block</button></a>
+                          {% else %}
+                          <a class="text-white bg-danger" style="text-decoration: none;" href="{% url 'block_user' i.id %}"><button type="button" class="btn btn-danger">Unblock</button></a>
+                          {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
               {% endfor %}
               </tbody>
 

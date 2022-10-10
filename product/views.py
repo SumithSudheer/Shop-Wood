@@ -216,9 +216,10 @@ def viewCart(request):
         return redirect(index)
 
 
-@never_cache
-def iquantity_cart(request, id):
+@csrf_exempt
+def iquantity_cart(request):
     if request.user.is_authenticated:
+        id = int(request.POST['id'])
         cart = CartItem.objects.get(id=id)
         if cart.product.inventory > cart.quantity:
             q = cart.quantity + 1
@@ -228,7 +229,20 @@ def iquantity_cart(request, id):
             CartItem.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
             count = CartItem.objects.filter(user_id=request.user.id).count()
             request.session['count'] = count
-        return redirect(viewCart)
+        # return redirect(viewCart)
+        cart_itm = CartItem.objects.get(id=id)
+        print(cart_itm.quantity)
+        quan = int(cart_itm.quantity)
+        tp = cart_itm.total_price-(cart_itm.total_price*cart_itm.product.category.offer)/100
+        print(tp)
+        print('2')
+        cart_all=CartItem.objects.filter(user=request.user)
+        t=0
+        for i in cart_all:
+            t+=i.total_price-(i.total_price*i.product.category.offer)/100
+        print(t)
+
+        return JsonResponse({'q': quan, 't':t, 'tp':tp })
     else:
         cart = Guest_Cart.objects.get(id=id)
         if cart.product.inventory > cart.quantity:
@@ -240,23 +254,40 @@ def iquantity_cart(request, id):
         return redirect(viewCart)
 
 
-@never_cache
-def dquantity_cart(request, id):
+@csrf_exempt
+def dquantity_cart(request):
+    print('hellloolllool')
     if request.user.is_authenticated:
+        id = int(request.POST['id'])
+        print(id)
         cart = CartItem.objects.get(id=id)
-        if cart.quantity == 1:
-            return remove_cart(request, id=id)
+
 
         if 0 < cart.quantity:
             q = cart.quantity - 1
 
             CartItem.objects.filter(id=id).update(quantity=cart.quantity - 1)
             cart = CartItem.objects.get(id=id)
+
             t = int(cart.unit_price) * int(cart.quantity)
             CartItem.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
             count = CartItem.objects.filter(user_id=request.user.id).count()
             request.session['count'] = count
-        return redirect(viewCart)
+
+        # return redirect(viewCart)
+        cart_itm = CartItem.objects.get(id=id)
+        print(cart_itm.quantity)
+        quan = int(cart_itm.quantity)
+        print('2')
+        unit_price = cart_itm.product.price
+        offer = (unit_price - (cart_itm.product.category.offer * unit_price)/100)*cart_itm.quantity
+        print(offer)
+        cart_all = CartItem.objects.filter(user=request.user)
+        t = 0
+        for i in cart_all:
+            t += i.total_price - (i.total_price * i.product.category.offer) / 100
+        print(t)
+        return JsonResponse({'q': quan, 'offer':offer, 'price':unit_price*cart_itm.quantity, 't':t})
     else:
         cart = Guest_Cart.objects.get(id=id)
         if cart.quantity == 1:

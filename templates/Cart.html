@@ -21,6 +21,11 @@
 </div>
 </div>
 </div>
+<style>
+    .disabled{
+    pointer-events:none;
+    }
+</style>
 
     <section class="h-100 gradient-custom">
   <div class="container py-5">
@@ -56,7 +61,7 @@
                 <!-- Image -->
                 <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
                   <img src="/media/{{i.product_image}}"
-                    class="w-100" alt="Blue Jeans Jacket" />
+                    class="w-100" alt="Blue Jeans Jacket" style="height:150px;" />
                   <a href="#!">
                     <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
                   </a>
@@ -82,20 +87,19 @@
                 <!-- Quantity -->
                 <div class="d-flex mb-4" style="max-width: 300px">
 
-                    <button type="button" class="btn btn-success btn-number"   data-field="quant[2]" style="height:40px" onclick="location.href='{% url 'dquantity' i.id %}'" {% if i.quantity == 1 %} disabled {% elif i.quanitity > 1 %} enable {% endif %} >
+                    <button type="button" id="dec{{i.id}}"  data-field="quant[2]" style="height:40px" onclick="decreaseQuantity({{i.id}})" {% if i.quantity == 1 %} class="disabled btn btn-success btn-number" {% else %} class="btn btn-success btn-number" {% endif %} >
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
   <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
 </svg>
-<!--                  <a href="{% url 'dquantity' i.id %}" style="text-decoration:none;">-</a>-->
+
                 </button >
 
-                    <div class="form-outline">
-                    <input id="form1" min="0" name="quantity" value="{{ i.quantity }}" type="number" class="form-control" disabled/>
-                    <label class="form-label" for="form1">Quantity</label>
+                    <div class="form-outline" style="width:10%;display:flex;justify-content:center;align-items:center;" id="{{i.id}}">
+                    {{i.quantity}}
                   </div>
 
 
-                              <button type="button" class="btn btn-danger btn-number"   style="height:40px" onclick="location.href='{% url 'iquantity' i.id %}'">
+                              <button type="button" class="btn btn-danger btn-number"   style="height:40px" onclick="increaseQuantity({{i.id}})">
                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
 </svg>
@@ -111,8 +115,8 @@
 
                 <!-- Price -->
                 <p class="text-start text-md-center">
-                  <strong>${{ i.offer }}</strong><br>
-                    <strong><s>${{ i.total_price }}</s></strong>
+                    <strong><div id="total_offer{{i.id}}">{{ i.offer }}</div></strong><br>
+                    <strong><s id="total_price{{i.id}}">${{ i.total_price }}</s></strong>
                 </p>
                 <!-- Price -->
               </div>
@@ -138,7 +142,7 @@
         <div class="card mb-4">
           <div class="card-header py-3">
               {% if not cart %}<div><strong>No Items On Cart</strong></div>{% else %}
-              <div><strong>Total Price<p>{{total_amount}}</p></strong></div>{% endif %}
+              <div><strong>Total Price<p id="total_amount">{{total_amount}}</p></strong></div>{% endif %}
         </div>
             <button class="btn btn-success" onclick="location.href='{% url 'checkout' %}'" {% if not cart %} disabled {% endif %}>Checkout</button>
       </div>
@@ -148,6 +152,104 @@
   </div>
 
 </section>
+<script src="jquery-3.6.0.min.js"></script>
+<script>
+
+    function decreaseQuantity(id){
+     var sumith = document.getElementById(id)
+     var k = 'dec'+id
+     var btn = document.getElementById(k)
+     var p = 'total_offer'+id
+     var tot = document.getElementById(p)
+     var pp = 'total_price'+id
+     var pri = document.getElementById(pp)
+      console.log("kkkkkkkkkkkkkk")
+      console.log(id)
+
+
+      $.ajax({
+        headers: {
+          "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+
+        },
+        type : "POST",
+        url : "{% url 'dquantity' %}",
+
+        data : {
+
+          id : id
+
+
+        },
+        success: function(response){
+          quan = response.q
+          offer = response.offer
+          price = response.price
+          total = response.t
+          console.log(total)
+          document.getElementById(id).innerHTML=quan
+          document.getElementById(p).innerHTML=offer
+          document.getElementById(pp).innerHTML=price
+          document.getElementById('total_amount').innerHTML=total
+          if(quan == 1){
+            btn.classList.add('disabled')
+
+          }else{
+            btn.classList.remove('disabled')
+          }
+
+        }
+      })
+    }
+    function increaseQuantity(id){
+     var sumith = document.getElementById(id)
+     var k = 'dec'+id
+     var btn = document.getElementById(k)
+     var p = 'total_offer'+id
+     var pp = 'total_price'+id
+      console.log("kkkkkkkkkkkkkk")
+      console.log(id)
+
+
+      $.ajax({
+        headers: {
+          "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+
+        },
+        type : "POST",
+        url : "{% url 'iquantity' %}",
+
+        data : {
+
+          id : id
+
+
+        },
+        success: function(response){
+          quan = response.q
+          offer = response.offer
+          price = response.price
+          total = response.t
+          console.log(quan)
+          document.getElementById(id).innerHTML=quan
+          document.getElementById(p).innerHTML=offer
+          document.getElementById(pp).innerHTML=price
+          document.getElementById('total_amount').innerHTML=total
+          if(quan > 1){
+            btn.classList.remove('disabled')
+            console.log("123")
+
+          }else{
+          console.log("456")
+            btn.classList.add('disabled')
+          }
+
+
+        }
+      })
+    }
+
+  </script>
     {% endblock %}
 </div></body></html>
 

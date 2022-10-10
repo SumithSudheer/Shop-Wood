@@ -84,19 +84,17 @@
       <span class="badge bg-success"><a href="{% url 'dashboard' %}" class="w3-bar-item w3-button btn btn-success">Dashboard</a></span>
       <a href="{% url 'usermanagement' %}" class="w3-bar-item w3-button">user management</a>
       <a href="{% url 'productmanagement' %}" class="w3-bar-item w3-button">Product management</a>
-        {% if request.path == '/manage/productmanagement/' or request.path == path %}
+        {% if request.path == '/manage/productmanagement/' %}
         <a href="{% url 'addproduct' %}" class="w3-bar-item w3-button">Add Product</a>
         {% endif %}
-      <a href="{% url 'categorymanagement' %}" class="w3-bar-item w3-button">Category Management</a>
-                {% if request.path == '/manage/categorymanagement/' or request.path == path %}
+        <a href="{% url 'categorymanagement' %}" class="w3-bar-item w3-button">Category Management</a>
+         {% if request.path == '/manage/categorymanagement/' %}
 
-              <a href="{% url 'addcategory' %}" class="w3-bar-item w3-button">Add Category</a>
-                {% endif %}
-
-
+      <a href="{% url 'addcategory' %}" class="w3-bar-item w3-button">Add Category</a>
+        {% endif %}
       <a href="{% url 'ordermanage' %}" class="w3-bar-item w3-button">Order management</a>
       <a href="{% url 'coupons' %}" class="w3-bar-item w3-button">Coupon management</a>
-                        {% if request.path == '/manage/categorymanagement/' or request.path == path %}
+                     {% if request.path == '/manage/coupons/' %}
 
       <a href="{% url 'addcoupons' %}" class="w3-bar-item w3-button">Add Coupon</a>
        {% endif %}

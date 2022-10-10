@@ -12,11 +12,27 @@ from django.contrib.postgres.search import SearchVector
 from django.db.models import Sum
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
+from django.contrib import messages
 
 
 # Create your views here.
+# def index(request):
+#     if request.user.is_authenticated and request.user.is_staff:
+#         return redirect(dashboard)
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         password = request.POST['password']
+#         user = authenticate(email=email, password=password)
+#         if user is not None and user.is_staff == True and user.active == True:
+#             login(request, user)
+#             return redirect(dashboard)
+#     return render(request, 'login_admin.html')
 def index(request):
-    if request.user.is_authenticated:
+    print('helllossmslalslaslas')
+    print(request.user.is_staff)
+    if request.user.is_authenticated and request.user.is_staff:
+        print('helllossmslalslaslas')
+        print(request.user.is_staff)
         return redirect(dashboard)
     if request.method == 'POST':
         email = request.POST['email']
@@ -29,7 +45,7 @@ def index(request):
 
 
 def dashboard(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         product = Product.objects.all()
         user_count = User.objects.all().count()
         order_price = Payment.objects.all().aggregate(Sum('amount_paid'))
@@ -102,8 +118,16 @@ def addcategory(request):
         if request.method == 'POST':
             name = request.POST['name']
             offer = request.POST['offer']
-            ins = Category(name=name, offer=offer)
-            ins.save()
+            try:
+                ins = Category(name=name, offer=offer)
+                ins.save()
+            except :
+                if Category.objects.get(name=name):
+                    messages.error(request, ("Name already Exists"))
+                else:
+                    messages.error(request, ("Enter valid details"))
+
+
         return render(request, 'addcategory.html')
     return redirect(index)
 
