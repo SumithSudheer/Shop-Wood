@@ -63,10 +63,10 @@
 
                   <div class="form-outline datepicker w-100">
                       {% if request.user.phone %}
-                    <input type="text" class="form-control form-control-lg" id="birthdayDate" placeholder="{{ request.user.phone }}" disabled/>
+                    <input type="number" class="form-control form-control-lg" name="phone" id="birthdayDate" placeholder="{{ request.user.phone }}" value="{{ request.user.phone }}"/>
                     <label for="birthdayDate" class="form-label">Phone</label>
                       {% else %}
-                      <input type="text" class="form-control form-control-lg" name="phone" id="birthdayDate" placeholder="Add Phone Number" />
+                      <input type="number" class="form-control form-control-lg" name="phone" id="birthdayDate" placeholder="Add Phone Number" min="1000000000" max="9999999999" />
                     <label for="birthdayDate" class="form-label">Phone</label>
                       {% endif %}
                   </div>

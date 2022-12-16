@@ -8,10 +8,13 @@ from account.models import User
 
 
 import product.models
+
+
 class Order(models.Model):
-    payment_choice = (
+    payment_choice1 = (
         ("1", "COD"),
-        ("2", "UPI")
+        ("2", "RAZORPAY"),
+        ("3", "PAYPAL"),
 
     )
     delivery_status_choice =(
@@ -29,7 +32,7 @@ class Order(models.Model):
     quantity = models.IntegerField()
     total_price= models.DecimalField(max_digits=6, decimal_places=2)
     payment_id = models.CharField(max_length=200, null=True )
-    payment_method = models.CharField(max_length=200, choices=payment_choice)
+    payment_method = models.CharField(max_length=200, choices=payment_choice1)
     payment_status = models.BooleanField(default=False)
     delivery_status = models.CharField(max_length=200, choices=delivery_status_choice, default="P")
     status = models.BooleanField(default=True)

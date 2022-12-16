@@ -114,9 +114,9 @@
                 <!-- Quantity -->
 
                 <!-- Price -->
-                <p class="text-start text-md-center">
-                    <strong><div id="total_offer{{i.id}}">{{ i.offer }}</div></strong><br>
-                    <strong><s id="total_price{{i.id}}">${{ i.total_price }}</s></strong>
+                <p class="text-start text-md-center fw-bold">
+                    <strong><div><b id="total_offer{{i.id}}">₹ {{ i.offer }}</b></div></strong><br>
+                    <strong><s id="total_price{{i.id}}">₹ {{ i.total_price }}</s></strong>
                 </p>
                 <!-- Price -->
               </div>
@@ -142,7 +142,7 @@
         <div class="card mb-4">
           <div class="card-header py-3">
               {% if not cart %}<div><strong>No Items On Cart</strong></div>{% else %}
-              <div><strong>Total Price<p id="total_amount">{{total_amount}}</p></strong></div>{% endif %}
+              <div><strong>Total Price<p id="total_amount">₹ {{total_amount}}</p></strong></div>{% endif %}
         </div>
             <button class="btn btn-success" onclick="location.href='{% url 'checkout' %}'" {% if not cart %} disabled {% endif %}>Checkout</button>
       </div>
@@ -188,9 +188,9 @@
           total = response.t
           console.log(total)
           document.getElementById(id).innerHTML=quan
-          document.getElementById(p).innerHTML=offer
-          document.getElementById(pp).innerHTML=price
-          document.getElementById('total_amount').innerHTML=total
+          document.getElementById(p).innerHTML='₹ '+offer
+          document.getElementById(pp).innerHTML='₹ '+price
+          document.getElementById('total_amount').innerHTML='₹ '+total
           if(quan == 1){
             btn.classList.add('disabled')
 
@@ -232,9 +232,13 @@
           total = response.t
           console.log(quan)
           document.getElementById(id).innerHTML=quan
-          document.getElementById(p).innerHTML=offer
-          document.getElementById(pp).innerHTML=price
-          document.getElementById('total_amount').innerHTML=total
+          document.getElementById(p).innerHTML='₹ '+offer
+          document.getElementById(pp).innerHTML='₹ '+price
+          document.getElementById('total_amount').innerHTML='₹ '+total
+          console.log("quan"+quan)
+          console.log("offer"+offer)
+          console.log("price"+price)
+          console.log("total"+total)
           if(quan > 1){
             btn.classList.remove('disabled')
             console.log("123")

@@ -28,20 +28,18 @@ from django.contrib import messages
 #             return redirect(dashboard)
 #     return render(request, 'login_admin.html')
 def index(request):
-    print('helllossmslalslaslas')
-    print(request.user.is_staff)
     if request.user.is_authenticated and request.user.is_staff:
-        print('helllossmslalslaslas')
-        print(request.user.is_staff)
         return redirect(dashboard)
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(email=email, password=password)
-        if user is not None and user.is_staff == True and user.active == True:
-            login(request, user)
-            return redirect(dashboard)
-    return render(request, 'login_admin.html')
+    else:
+
+        if request.method == 'POST':
+            email = request.POST['email']
+            password = request.POST['password']
+            user = authenticate(email=email, password=password)
+            if user is not None and user.is_staff == True and user.active == True:
+                login(request, user)
+                return redirect(dashboard)
+        return render(request, 'login_admin.html')
 
 
 def dashboard(request):
@@ -66,7 +64,7 @@ def dashboard(request):
 
 
 def usermanagement(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         text = request.GET.get('searchs')
         if text is not None:
             table = User.objects.annotate(search=SearchVector('id', 'name', 'email', 'phone')).filter(
@@ -84,7 +82,7 @@ def usermanagement(request):
 
 
 def block_user(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         flag = User.objects.all().values('active').get(id=id)
         if flag['active'] == True:
             User.objects.filter(id=id).update(active=False)
@@ -96,7 +94,7 @@ def block_user(request, id):
 
 
 def categorymanagement(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         text = request.GET.get('searchs')
         if text is not None:
             table = Category.objects.annotate(search=SearchVector('id', 'name', 'offer')).filter(search=text).values(
@@ -114,7 +112,7 @@ def categorymanagement(request):
 
 
 def addcategory(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         if request.method == 'POST':
             name = request.POST['name']
             offer = request.POST['offer']
@@ -133,12 +131,18 @@ def addcategory(request):
 
 
 def editcategory(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         path = request.path
         if request.method == 'POST':
             name = request.POST['name']
             offer = request.POST['offer']
-            Category.objects.filter(id=id).update(name=name, offer=offer)
+            try:
+                Category.objects.filter(id=id).update(name=name, offer=offer)
+            except:
+                if Category.objects.get(name=name):
+                    messages.error(request, ("Name already Exists"))
+                else:
+                    messages.error(request, ("Enter valid details"))
         table1 = Category.objects.filter(id=id).values('name', 'offer')
 
         return render(request, 'editCategorymanagement.html', context={'table1': table1, 'path': path})
@@ -146,7 +150,7 @@ def editcategory(request, id):
 
 
 def productmanagement(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         text = request.GET.get('searchs')
         if text is not None:
             table = Product.objects.annotate(search=SearchVector('id', 'title', 'category', 'price', 'inventory')
@@ -166,7 +170,7 @@ def productmanagement(request):
 
 @login_required(login_url='/manage/')
 def addproduct(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         form = ProductForm()
         if request.method == 'POST':
             form = ProductForm(request.POST, request.FILES)
@@ -183,7 +187,7 @@ def addproduct(request):
 
 @login_required(login_url='/manage/')
 def editproduct(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         product = Product.objects.get(id=id)
         path = request.path
         if request.method == 'POST':
@@ -204,7 +208,7 @@ def editproduct(request, id):
 
 @login_required(login_url='/manage/')
 def deleteproduct(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         Product.objects.filter(id=id).delete()
         return redirect(productmanagement)
     return redirect(index)
@@ -212,7 +216,7 @@ def deleteproduct(request, id):
 
 @login_required(login_url='/manage/')
 def deletecategory(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         Category.objects.filter(id=id).delete()
         return redirect(categorymanagement)
     return redirect(index)
@@ -220,7 +224,7 @@ def deletecategory(request, id):
 
 @login_required(login_url='/manage/')
 def logout_user(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         logout(request)
         return redirect(index)
 
@@ -228,7 +232,7 @@ def logout_user(request):
 
 
 def order_manage(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         text = request.GET.get('searchs')
         if text is not None:
             table = Order.objects.annotate(search=SearchVector('id', 'product_id', 'user_id', )
@@ -250,7 +254,7 @@ def order_manage(request):
 
 
 def ordercancel(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         order = Order.objects.get(id=id)
         if order.status and order.delivery_status == 'P':
             Order.objects.filter(id=id).update(status=False)
@@ -289,7 +293,7 @@ def coupon_management(request):
 
 
 def add_coupons(request):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         if request.method == 'POST':
             form = CouponForm(request.POST)
 
@@ -302,7 +306,7 @@ def add_coupons(request):
 
 
 def edit_coupons(request, id):
-    if request.user.is_authenticated and request.user.active:
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
         coupons = Coupons.objects.get(id=id)
         if request.method == 'POST':
             form = CouponForm(request.POST, request.FILES, instance=coupons)
@@ -320,56 +324,87 @@ def edit_coupons(request, id):
 
 
 def sales_report(request):
+    if request.user.is_authenticated and request.user.active and request.user.is_staff:
+        product = Product.objects.all()
+        ymax = timezone.now()
+        ymin = (timezone.now() - datetime.timedelta(days=365))
+        yearly = Order.objects.filter(order_at__lte=ymax, order_at__gte=ymin)
+        mmax = timezone.now()
+        mmin = (timezone.now() - datetime.timedelta(days=30))
+        monthly = Order.objects.filter(order_at__lte=mmax, order_at__gte=mmin)
+        ymax = timezone.now()
+        ymin = (timezone.now() - datetime.timedelta(days=7))
+        weekly = Order.objects.filter(order_at__lte=ymax, order_at__gte=ymin)
+        a = []
+        n = 1
+        subm = timezone.now()
+        n = 4
+        for i in range(4):
+            k = 0
+            for i in monthly:
+                if i.order_at <= subm and i.order_at >= (subm - datetime.timedelta(days=7)):
+                    k += 1
+
+            a.append({'name': 'week' + str(n), 'value': k})
+            n -= 1
+            subm = subm - datetime.timedelta(days=7)
+
+        subw = timezone.now()
+        n = 7
+        b = []
+        for i in range(7):
+            k = 0
+            for i in weekly:
+                if i.order_at <= subw and i.order_at >= (subw - datetime.timedelta(days=1)):
+                    k += 1
+            b.append({'name': 'day' + str(n), 'value': k})
+            n -= 1
+            subw = subw - datetime.timedelta(days=1)
+        monthly_sales = list(reversed(a))
+        weekly_sales = list(reversed(b))
+        user_count = User.objects.all().count()
+        order_price = Payment.objects.all().aggregate(Sum('amount_paid'))
+        total_income = order_price['amount_paid__sum']
+        order_count = Order.objects.all().count()
+        product_count = product.count()
+        payment = Payment.objects.all()
+
+        abel = Order.objects.filter(order_at__year=2022)
+        abel2 = Order.objects.values('order_at','order_id','total_price','delivery_status').annotate(month=TruncMonth('order_at')).values('month','order_at','order_id','total_price','delivery_status').annotate(c=Count('id')).values('month','c','order_at','order_id','total_price','delivery_status')
+        lol=[]
+        for i in abel2:
+            lol.append({'order_id':i['order_id'],'delivery_status':i['delivery_status'],'month':i['month'].month,'year':i['month'].year,'total_price':i['total_price']})
+        return render(request, 'salesreport.html',
+                      context={'monthly': monthly, 'yearly': yearly, 'monthly_sales': monthly_sales,
+                               'weekly_sales': weekly_sales, 'user_count': user_count, 'total_income': total_income,
+                               'order_count': order_count, 'product_count': product_count, 'payment': payment, 'lol':lol})
+    return redirect(index)
+
+def offermanage(request):
+    category = Category.objects.all()
     product = Product.objects.all()
-    ymax = timezone.now()
-    ymin = (timezone.now() - datetime.timedelta(days=365))
-    yearly = Order.objects.filter(order_at__lte=ymax, order_at__gte=ymin)
-    mmax = timezone.now()
-    mmin = (timezone.now() - datetime.timedelta(days=30))
-    monthly = Order.objects.filter(order_at__lte=mmax, order_at__gte=mmin)
-    ymax = timezone.now()
-    ymin = (timezone.now() - datetime.timedelta(days=7))
-    weekly = Order.objects.filter(order_at__lte=ymax, order_at__gte=ymin)
-    a = []
-    n = 1
-    subm = timezone.now()
-    n = 4
-    for i in range(4):
-        k = 0
-        for i in monthly:
-            if i.order_at <= subm and i.order_at >= (subm - datetime.timedelta(days=7)):
-                k += 1
+    context={'category':category, 'product':product}
+    return render(request, 'offermanagement.html', context)
 
-        a.append({'name': 'week' + str(n), 'value': k})
-        n -= 1
-        subm = subm - datetime.timedelta(days=7)
+def offermanagec(request, id):
+    category = Category.objects.all()
+    product = Product.objects.all()
+    cat = Category.objects.get(id=id)
+    if request.method=='POST':
+        offer = request.POST['offer']
+        Category.objects.filter(id=id).update(offer=offer)
+        return redirect(offermanage)
 
-    subw = timezone.now()
-    n = 7
-    b = []
-    for i in range(7):
-        k = 0
-        for i in weekly:
-            if i.order_at <= subw and i.order_at >= (subw - datetime.timedelta(days=1)):
-                k += 1
-        b.append({'name': 'day' + str(n), 'value': k})
-        n -= 1
-        subw = subw - datetime.timedelta(days=1)
-    monthly_sales = list(reversed(a))
-    weekly_sales = list(reversed(b))
-    user_count = User.objects.all().count()
-    order_price = Payment.objects.all().aggregate(Sum('amount_paid'))
-    total_income = order_price['amount_paid__sum']
-    order_count = Order.objects.all().count()
-    product_count = product.count()
-    payment = Payment.objects.all()
+    context = {'category': category, 'product': product, 'cat':cat}
+    return render(request, 'offermanagement.html', context)
 
-    abel = Order.objects.filter(order_at__year=2022)
-    abel2 = Order.objects.values('order_at','order_id','total_price','delivery_status').annotate(month=TruncMonth('order_at')).values('month','order_at','order_id','total_price','delivery_status').annotate(c=Count('id')).values('month','c','order_at','order_id','total_price','delivery_status')
-    lol=[]
-    for i in abel2:
-        lol.append({'order_id':i['order_id'],'delivery_status':i['delivery_status'],'month':i['month'].month,'year':i['month'].year,'total_price':i['total_price']})
-    return render(request, 'salesreport.html',
-                  context={'monthly': monthly, 'yearly': yearly, 'monthly_sales': monthly_sales,
-                           'weekly_sales': weekly_sales, 'user_count': user_count, 'total_income': total_income,
-                           'order_count': order_count, 'product_count': product_count, 'payment': payment, 'lol':lol})
+def offermanagep(request, id):
+    category = Category.objects.all()
+    product = Product.objects.all()
+    cat = Product.objects.get(id=id)
+    if request.method=='POST':
+        offer = request.POST['offer']
+        Product.objects.filter(id=id).update(offer=offer)
+        return redirect(offermanage)
+    context = {'category': category, 'product': product, 'cat':cat}
+    return render(request, 'offermanagement.html', context)

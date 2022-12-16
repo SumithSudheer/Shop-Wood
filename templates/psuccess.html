@@ -88,14 +88,14 @@
                                             <tr>
                                                 <td class="text-center">  {{ i.product.title }}</td>
                                                 <td class="text-center">  {{ i.quantity }}</td>
-                                                <td class="text-center">$ {{ i.total_price }} USD</td>
+                                                <td class="text-center">₹ {{ i.total_price }} INR</td>
                                             </tr>
                                              {% endfor %}
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">$ {{ total }} USD</th>
+                                                <th class="text-center">₹ {{ total }} INR</th>
                                             </tr>
                                             {% if request.session.coupon_offer %}
                                             <tr>
@@ -107,7 +107,7 @@
 
                                             <tr>
                                                 <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">$ {{ total }} USD</th>
+                                                <th class="text-center">₹ {{ total }} INR</th>
                                             </tr>
                                         </tfoot>
                                     </table>

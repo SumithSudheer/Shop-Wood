@@ -35,17 +35,17 @@
                     <tr>
                     <td>{{ i.product_title }}</td>
                     <td>{{i.quantity}}</td>
-                    <td>₹{{i.total_price}}</td>
-                    <td>₹{{i.offer}}</td>
+                    <td>₹ {{i.total_price}}</td>
+                    <td>₹ {{i.offer}}</td>
                   </tr>
                     {% endfor %}
 
                 </table>
-              <strong>Total Price : ₹{{t}}</strong>
+              <strong>Total Price : ₹ {{t}}</strong>
           </div>
 
         <div class="col-xl-12">
-          <p class="float-end fw-bold">Total: ₹{{ t }}
+          <p class="float-end fw-bold">Total: ₹ {{ t }}
           </p>
         </div>
 

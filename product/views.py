@@ -37,7 +37,7 @@ def product_home(request):
 def productview(request, id):
     product_test = Product.objects.all()[:3]
     products = Product.objects.get(id=id)
-    offr_price = (products.price - (products.price * products.category.offer) / 100)
+    offr_price = (products.price - (products.price * products.category.offer) / 100)-(products.price - (products.price * products.category.offer)/100 * products.offer)/100
     if request.method == 'POST' and request.user.is_authenticated:
         cid = request.POST['cid']
         cart_temp = CartItem.objects.filter(product=cid, user=request.user.id)
@@ -77,8 +77,8 @@ def productview(request, id):
 
     product_list = []
     for i in product_test:
-        product_list.append({'title': i.title, 'description': i.description, 'image1': i.image1, 'price': i.price,
-                             'offer_price': (i.price - (i.price * i.category.offer) / 100)})
+        product_list.append({'title': i.title, 'description': i.description, 'image1': i.image1, 'price': i.price, 'id':i.id,
+                             'offer_price': (i.price - (i.price * i.category.offer) / 100)-(i.price - (i.price * i.category.offer)/100 * i.offer)/100})
 
     id1 = int(id)
     product_view = request.path
@@ -91,13 +91,13 @@ def productview(request, id):
 def products(request):
     request.session['price_filter'] = 'False'
     category = Category.objects.values('name', 'id').order_by('id')
-    product1 = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1')
+    product1 = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1', 'offer','category')
     text = request.GET.get('search')
 
     if request.method == 'GET' and text is not None:
         product_view = request.path
         text = request.GET.get('search')
-        product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1').annotate(
+        product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1', 'offer', 'category').annotate(
             search=SearchVector('title', 'description', 'price')).filter(search=text)
         table1 = Paginator(product, 6)
         page_number = request.GET.get('page')
@@ -112,7 +112,7 @@ def products(request):
             request.session['min']=min
             request.session['max']=max
             request.session['price_filter']='True'
-            product = Product.objects.filter(price__lte=max,price__gte=min).values('id', 'title', 'description', 'price', 'inventory', 'image1')
+            product = Product.objects.filter(price__lte=max,price__gte=min).values('id', 'title', 'category', 'description', 'price', 'inventory', 'image1', 'offer')
             # return redirect(products)
             table1 = Paginator(product, 6)
             page_number = request.GET.get('page')
@@ -124,9 +124,9 @@ def products(request):
     if request.session['price_filter']=='True':
         max=request.session['max']
         min=request.session['min']
-        product = Product.objects.filter(price__lte=max, price__gte=min).values('id', 'title', 'description', 'price', 'inventory', 'image1')
+        product = Product.objects.filter(price__lte=max, price__gte=min).values('id', 'title', 'description', 'price', 'inventory', 'image1', 'offer', 'category')
     else:
-         product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1')
+         product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1', 'offer', 'category')
     table1 = Paginator(product, 6)
     page_number = request.GET.get('page')
     page_obj = table1.get_page(page_number)
@@ -139,11 +139,11 @@ def products(request):
 def productsf(request, id):
     category = Category.objects.values('id', 'name', 'id').order_by('id')
     product1 = Product.objects.filter(category_id=id).values('id', 'title', 'description', 'price', 'inventory',
-                                                             'image1')
+                                                             'image1', 'offer')
 
     if request.GET.get('search') is not None:
         text = request.GET.get('search')
-        product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1').annotate(
+        product = Product.objects.values('id', 'title', 'description', 'price', 'inventory', 'image1', 'offer').annotate(
             search=SearchVector('id', 'title', 'description', 'price')).filter(search=text, category_id=id)
         table1 = Paginator(product, 6)
         page_number = request.GET.get('page')
@@ -152,7 +152,7 @@ def productsf(request, id):
         return render(request, 'collection-v1.html',
                       context={'page_obj': page_obj, 'category': category, 'id': id, 'product_view': product_view})
     product = Product.objects.filter(category_id=id).values('id', 'title', 'description', 'price', 'inventory',
-                                                            'image1')
+                                                            'image1', 'offer')
     table1 = Paginator(product, 6)
     page_number = request.GET.get('page')
     page_obj = table1.get_page(page_number)
@@ -186,7 +186,7 @@ def viewCart(request):
         k = []
         for i in cart:
             k.append({'id': i.id, 'unit_price': i.unit_price,
-                      'offer': (i.total_price - (i.product.category.offer * i.total_price) / 100),
+                      'offer': (i.total_price - (i.product.category.offer * i.total_price) / 100-(i.product.price - (i.product.price * i.product.category.offer)/100 * i.product.offer)/100),
                       'quantity': i.quantity, 'total_price': i.total_price, 'product_title': i.product.title,
                       'product_description': i.product.description, 'product_image': i.product.image1})
 
@@ -231,19 +231,18 @@ def iquantity_cart(request):
             request.session['count'] = count
         # return redirect(viewCart)
         cart_itm = CartItem.objects.get(id=id)
-        print(cart_itm.quantity)
         quan = int(cart_itm.quantity)
         tp = cart_itm.total_price-(cart_itm.total_price*cart_itm.product.category.offer)/100
-        print(tp)
-        print('2')
+        offer = (cart_itm.product.price - (cart_itm.product.category.offer * cart_itm.product.price) / 100) * cart_itm.quantity
         cart_all=CartItem.objects.filter(user=request.user)
         t=0
         for i in cart_all:
             t+=i.total_price-(i.total_price*i.product.category.offer)/100
-        print(t)
+        request.session['t'] = str(t)
 
-        return JsonResponse({'q': quan, 't':t, 'tp':tp })
+        return JsonResponse({'q': quan, 't':t, 'offer':offer ,'price':cart_itm.product.price*cart_itm.quantity })
     else:
+        id = int(request.POST['id'])
         cart = Guest_Cart.objects.get(id=id)
         if cart.product.inventory > cart.quantity:
             q = cart.quantity + 1
@@ -251,15 +250,28 @@ def iquantity_cart(request):
             cart = Guest_Cart.objects.get(id=id)
             t = cart.unit_price * cart.quantity
             Guest_Cart.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
-        return redirect(viewCart)
+            count = Guest_Cart.objects.filter(user_ref=request.session.session_key).count()
+            request.session['count'] = count
+        cart_itm = Guest_Cart.objects.get(id=id)
+
+        quan = int(cart_itm.quantity)
+        tp = cart_itm.total_price - (cart_itm.total_price * cart_itm.product.category.offer) / 100
+        offer = (cart_itm.product.price - (
+                    cart_itm.product.category.offer * cart_itm.product.price) / 100) * cart_itm.quantity
+        cart_all = Guest_Cart.objects.filter(user_ref=request.session.session_key)
+        t = 0
+        for i in cart_all:
+            t += i.total_price - (i.total_price * i.product.category.offer) / 100
+        request.session['t'] = str(t)
+
+        return JsonResponse({'q': quan, 't': t, 'offer': offer, 'price': cart_itm.product.price * cart_itm.quantity})
+
 
 
 @csrf_exempt
 def dquantity_cart(request):
-    print('hellloolllool')
     if request.user.is_authenticated:
         id = int(request.POST['id'])
-        print(id)
         cart = CartItem.objects.get(id=id)
 
 
@@ -276,31 +288,39 @@ def dquantity_cart(request):
 
         # return redirect(viewCart)
         cart_itm = CartItem.objects.get(id=id)
-        print(cart_itm.quantity)
         quan = int(cart_itm.quantity)
-        print('2')
         unit_price = cart_itm.product.price
         offer = (unit_price - (cart_itm.product.category.offer * unit_price)/100)*cart_itm.quantity
-        print(offer)
         cart_all = CartItem.objects.filter(user=request.user)
         t = 0
         for i in cart_all:
             t += i.total_price - (i.total_price * i.product.category.offer) / 100
-        print(t)
+        request.session['t'] = str(t)
         return JsonResponse({'q': quan, 'offer':offer, 'price':unit_price*cart_itm.quantity, 't':t})
     else:
+        id = int(request.POST['id'])
         cart = Guest_Cart.objects.get(id=id)
-        if cart.quantity == 1:
-            return remove_cart(request, id=id)
 
         if 0 < cart.quantity:
             q = cart.quantity - 1
 
             Guest_Cart.objects.filter(id=id).update(quantity=cart.quantity - 1)
             cart = Guest_Cart.objects.get(id=id)
+
             t = int(cart.unit_price) * int(cart.quantity)
             Guest_Cart.objects.filter(id=id).update(total_price=cart.unit_price * cart.quantity)
-        return redirect(viewCart)
+            count = Guest_Cart.objects.filter(user_ref=request.session.session_key).count()
+            request.session['count'] = count
+        cart_itm = Guest_Cart.objects.get(id=id)
+        quan = int(cart_itm.quantity)
+        unit_price = cart_itm.product.price
+        offer = (unit_price - (cart_itm.product.category.offer * unit_price) / 100) * cart_itm.quantity
+        cart_all = Guest_Cart.objects.filter(user_ref=request.session.session_key)
+        t = 0
+        for i in cart_all:
+            t += i.total_price - (i.total_price * i.product.category.offer) / 100
+        request.session['t'] = str(t)
+        return JsonResponse({'q': quan, 'offer': offer, 'price': unit_price * cart_itm.quantity, 't': t})
 
 
 def remove_cart(request, id):
@@ -422,6 +442,7 @@ def success(request):
     add = request.session['add']
     adds = UserAddress.objects.filter(id=add)
     order_id_main = request.session['order_id_main']
+    Order.objects.filter(order_id=order_id_main).update(payment_method="3")
     order_ins = Order.objects.filter(order_id=order_id_main)
     cartid = request.session['cart']
     cart = []
@@ -467,6 +488,7 @@ def successp(request):
 
     total = request.session['total']
     order_id_main = request.session['order_id_main']
+    Order.objects.filter(order_id=order_id_main).update(payment_method="3")
     order_ins = Order.objects.filter(order_id=order_id_main)
     pay = Payment.objects.filter(order_id=order_id_main)
     CartItem.objects.filter(user=request.user).delete()
@@ -510,7 +532,11 @@ def order_view(request, id):
     order_ins = Order.objects.filter(id=id)
     order = Order.objects.get(id=id)
     adds = Billing_address.objects.filter(order_id_Ref=order.order_id)
-    return render(request, 'orderview.html', context={'order_ins': order_ins, 'adds': adds})
+    try:
+        pay =Payment.objects.get(order_id=order.order_id)
+    except:
+        pay = {'order_id':order.order_id,'created_at':order.order_at}
+    return render(request, 'orderview.html', context={'order_ins': order_ins, 'adds': adds,'pay':pay})
 
 
 def coupon_remove(request):

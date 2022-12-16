@@ -74,7 +74,7 @@
                     <tr>
                     <td>{{ i.product_title }}</td>
                     <td>{{i.quantity}}</td>
-                    <td>{{i.offer}}</td>
+                    <td>₹ {{i.offer}} INR</td>
                   </tr>
                     {% endfor %}
 
@@ -92,7 +92,7 @@
 
         <input type="text" class="form-control coupon" name="code"  />
               {% endif %}
-        <button type="submit" class="btn btn-primary btn-apply coupon" name="coupon" >Apply</button>
+        <button type="submit" class="btn btn-primary btn-apply coupon" name="coupon"{% if request.session.coupon_code %} disabled {% else %} enabled {% endif %}>Apply</button>
 
 
     <div class="custom-control custom-radio">

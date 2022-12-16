@@ -81,6 +81,7 @@
                                             <div>
                                                 <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
                                                     class="blog-card-date sidebar">₹ {{ i.price }} INR</div>
+
                                                 <h4 class="heading-h5-size mg-bottom-0">{{ i.title }}</h4>
                                             </div>
                                         </a></div>
@@ -107,7 +108,10 @@
                                     <div class="product-card-details v6">
                                         <div class="flex product-card-price-wrapper">
                                             <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
-                                                class="product-card-price v6">₹ {{ i.price }} INR</div>
+                                                class="product-card-price v6">₹ {{ i.price }} INR   </div>
+
+                                            <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_price_%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
+                                                class="product-card-price v6" style="color:red;"> {{i.offer}} % Off</div>
                                         </div>
                                         <h2 style="color:rgb(10,10,10)" class="heading-h5-size product-title">{{ i.title }}</h2>
                                         <div class="add-to-cart-wrapper v6">

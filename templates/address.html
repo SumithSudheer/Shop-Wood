@@ -40,7 +40,8 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label for="lastName" >Phone</label>
-                <input type="text" name="phone" class="form-control" id="lastName" placeholder="" name="phone" required/>
+                <input type="number" name="phone" class="form-control" id="lastName" placeholder="" name="phone" max="9999999999" oninvalid="this.setCustomValidity('Only 10 digits allowed')"
+  oninput="this.setCustomValidity('')" required/>
                 <div class="invalid-feedback">
                   Valid last name is required.
                 </div>

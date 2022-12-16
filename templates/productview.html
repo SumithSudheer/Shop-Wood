@@ -914,9 +914,9 @@
 
 
         <div class="section top wf-section">
-            <div class="container-default w-container">
-                <div class="w-layout-grid grid-2-columns product-top">
-                    	<div class="">
+            <div class="container-default w-container container">
+                <div class="w-layout-grid grid-2-columns product-top row">
+                    	<div class="col-6">
                 <ul id="glasscase" class="gc-start">
                     <li><img src="/media/{{ products.image1 }}" alt="Text" /></li>
                     <li><img src="/media/{{ products.image2 }}" alt="Text" /></li>
@@ -926,7 +926,14 @@
                 </ul>
 
 
-                    <div id="w-node-ed53650b-2da1-29a1-fdce-9aca45b85f8f-ba970a6d"
+
+
+
+
+
+                        </div>
+                    <div class="add-to-card-z-index-0">
+                    <div id="w-node-ed53650b-2da1-29a1-fdce-9aca45b85f8f-ba970a6d" class="col-6"
                         data-w-id="ed53650b-2da1-29a1-fdce-9aca45b85f8f"
                         style="-webkit-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(0.97, 0.97, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);opacity:0">
                         <h1 class="heading-h2-size">{{ products.title }}</h1>
@@ -936,10 +943,11 @@
                                 class="product-price">₹ {{ offr_price }} INR</div>
                             <div data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_compare_at_price_7dr10dr%22%2C%22to%22%3A%22innerHTML%22%7D%5D"
                                 class="product-price compared-price">₹{{ products.price }} INR</div>
+                             <p></p>
 
-                        </div>
 
-                        <div class="add-to-card-z-index-0">
+
+
                             <form
 
                                 class="w-commerce-commerceaddtocartform" method="POST">
@@ -953,14 +961,16 @@
 
                                             <input type="number" pattern="^[0-9]+₹" inputMode="numeric"
                                                 id="quantity-7accc634db41e8a4b6be26db101ecf24"
-                                                name="commerce-add-to-cart-quantity-input" min="1"
-                                                class="w-commerce-commerceaddtocartquantityinput input" value="1" />
+                                                name="commerce-add-to-cart-quantity-input" min="1" max="{{products.inventory}}"
+                                                class="w-commerce-commerceaddtocartquantityinput input" value="1"
+                                            oninvalid="this.setCustomValidity('Only {{products.inventory}} stock left')"
+                                            oninput="this.setCustomValidity('')"/>
                                         <input type="hidden" value="{{ products.id }}" name="cid">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                <div class="flex _2-buttons-center product"> <input type="submit"
+
+
+
+
+                        <div class="flex _2-buttons-center product"> <input type="submit"
                     data-node-type="commerce-add-to-cart-button" data-loading-text="Adding to cart..."
                     value="Add to Cart" aria-busy="false" aria-haspopup="dialog"
                     class="w-commerce-commerceaddtocartbutton button-primary product-card-50" /><a
@@ -968,10 +978,15 @@
                                         data-subscription-text="Subscribe now" aria-busy="false" aria-haspopup="false"
                                         class="w-commerce-commercebuynowbutton button-secondary product-cart-50"
                                         href="/checkout">Buy now</a></div>
-                            </form>
+
+                            </div>
+                                </div>
+                        </div>
+                        </div>
+</div>
 
 
-                            <div style="display:none" class="w-commerce-commerceaddtocartoutofstock empty-state">
+                    <div style="display:none" class="w-commerce-commerceaddtocartoutofstock empty-state">
                                 <div>This product is out of stock.</div>
                             </div>
                             <div data-node-type="commerce-add-to-cart-error" style="display:none"
@@ -985,7 +1000,7 @@
                                     data-w-add-to-cart-select-all-options-error="Please select an option in each set.">
                                     Product is not available in this quantity.</div>
                             </div>
-                        </div>
+                     </form>
 
 
                 </div>
@@ -1015,7 +1030,7 @@
                         {% for i in product_list %}
                         <div role="listitem" class="w-dyn-item"><a data-w-id="f95e2d50-8eed-9b58-221f-1a942e218859"
                                 style="-webkit-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-moz-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);-ms-transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0);transform:translate3d(0, 0, 0) scale3d(1, 1, 1) rotateX(0) rotateY(0) rotateZ(0) skew(0, 0)"
-                                href="/product/indoor-lounge-chair" class="card product-card v9 w-inline-block">
+                                href="{% url 'productview' i.id %}" class="card product-card v9 w-inline-block">
                                 <div class="image-wrapper product-card v8"><img style="height:300px"
                                         data-wf-sku-bindings="%5B%7B%22from%22%3A%22f_main_image_4dr%22%2C%22to%22%3A%22src%22%7D%5D"
                                         src="/media/{{ i.image1 }}"
