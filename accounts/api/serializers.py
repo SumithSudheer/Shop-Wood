@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User,BranchAdmin,Branch,Course,Subject,Topic
+from accounts.models import User,BranchAdmin,Branch,Course,Subject,Topic,Batch
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,3 +52,12 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
 
+class BatchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Batch
+        fields = '__all__'
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'

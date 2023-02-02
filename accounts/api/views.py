@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import UserSerializer,BranchAdminSerializer,BranchSerializer,CourseSerializer
+from .serializers import UserSerializer,BranchAdminSerializer,BranchSerializer,CourseSerializer,BatchSerializer,SubjectSerializer
 from rest_framework import status,generics
 from rest_framework.views import APIView
 from django.shortcuts import render 
-from accounts.models import BranchAdmin,Branch,Course
+from accounts.models import BranchAdmin,Branch,Course,Batch,Subject
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework import generics, authentication, permissions
@@ -146,3 +146,49 @@ class CourseRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().post(request, *args, **kwargs)
 
 #####COURSE CRUD OPERATIONS ENDS #########
+
+#####BATCH CRUD OPERATIONS  #########
+
+class BatchCreateView(generics.CreateAPIView):
+    queryset = Batch.objects.all()
+    serializer_class = BatchSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can create a Batch"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+class BatchRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Batch.objects.all()
+    serializer_class = BatchSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can Do Operations"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+#####BATCH CRUD OPERATIONS ENDS #########
+
+
+#####SUBJECT CRUD OPERATIONS  #########
+
+class SubjectCreateView(generics.CreateAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can create a Subject"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+class SubjectRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can Do Operations"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+#####SUBJECT CRUD OPERATIONS ENDS #########
+
