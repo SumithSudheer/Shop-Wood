@@ -1,9 +1,13 @@
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import UserSerializer
-from rest_framework import status
+from .serializers import UserSerializer,BranchAdminSerializer
+from rest_framework import status,generics
 from rest_framework.views import APIView
+from django.shortcuts import render 
+from accounts.models import BranchAdmin,Branch
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.hashers import make_password
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -37,3 +41,39 @@ class Register(APIView):
                 return Response(data = response, status = status.HTTP_201_CREATED)
             
         return Response(data=serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+############# CREATING BRANCH ADMIN #########
+
+
+class CreateBranchAdmin(generics.CreateAPIView):
+    serializer_class = BranchAdminSerializer
+
+    def post(self, request, *args, **kwargs):
+        # if not request.user.is_superuser:
+        #     return Response({"message": "Only superuser can create a BranchAdmin"}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        password = request.data.get('password')
+        hash_password = make_password(password)
+        print(request.data.get('password'))
+        serializer.validated_data['password'] = hash_password
+
+        user = BranchAdmin.objects.create(
+            email=serializer.validated_data["email"],
+            superadmin=serializer.validated_data["superadmin"],
+            branch=serializer.validated_data["branch"],
+            password=serializer.validated_data["password"],
+        )
+        # user.set_password(serializer.validated_data["password"])
+        user.save()
+
+        # BranchAdmin.objects.create(
+        #     user=user,
+        #     branch=serializer.validated_data["branch"]
+        # )
+
+        return Response({"message": "BranchAdmin created successfully"}, status=status.HTTP_201_CREATED)
+
+
+############# CREATING BRANCH ADMIN ENDS #########

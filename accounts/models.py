@@ -41,6 +41,7 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=50,unique=True)
     email = models.EmailField(max_length=100,unique=True)   
     mobile = models.CharField(max_length=10,unique=True,null=True)
+    designation = models.CharField(max_length=50,null=False)
     password = models.CharField(max_length=220,blank=False,null=False)
     joined_date = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
@@ -71,3 +72,51 @@ class User(AbstractBaseUser):
         return self.is_superuser
     def has_module_perms(self,add_label):
         return True
+
+############### Addition 01/02/23 #################################
+    def create_branch_admin(self, email, password, branch_name):
+        """
+        Create and save a BranchAdmin user with the given email and password.
+        """
+        branch_admin = self.branchadmin_set.create(
+            email=email,
+            password=password,
+            branch=Branch.objects.get(name=branch_name)
+        )
+        branch_admin.set_password(password)
+        branch_admin.save()
+        return branch_admin
+
+
+
+class BranchAdmin(models.Model):
+    email = models.EmailField(max_length=255, unique=True)
+    password = models.CharField(max_length=128)
+    superadmin = models.ForeignKey(User, on_delete=models.CASCADE)
+    branch = models.ForeignKey('Branch', on_delete=models.CASCADE)
+
+class Branch(models.Model):
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    courses = models.ManyToManyField('Course')
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Subject(models.Model):
+    name = models.CharField(max_length=100)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+
+class Module(models.Model):
+    name = models.CharField(max_length=100)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    time_needed = models.DurationField()
+
+class Topic(models.Model):
+    name = models.CharField(max_length=50)
+    module = models.ForeignKey(Module,on_delete=models.CASCADE)
+
+############### AdditionEnds #################################
