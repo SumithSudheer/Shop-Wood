@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User,BranchAdmin
+from accounts.models import User,BranchAdmin,Branch,Course,Subject,Topic
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +40,15 @@ class BranchAdminSerializer(serializers.ModelSerializer):
 #         model = BranchAdmin
 #         # exclude = ('superadmin','branch')
 #         fields = ['email', 'password' ]
+
+
+class BranchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Branch
+        fields = ['name', 'location']
+
+class CourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
 

@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import UserSerializer,BranchAdminSerializer
+from .serializers import UserSerializer,BranchAdminSerializer,BranchSerializer,CourseSerializer
 from rest_framework import status,generics
 from rest_framework.views import APIView
 from django.shortcuts import render 
-from accounts.models import BranchAdmin,Branch
+from accounts.models import BranchAdmin,Branch,Course
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework import generics, authentication, permissions
@@ -86,6 +86,8 @@ class BranchAdminLogin(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        # if not request.user.is_superuser:
+        #     return Response({"message": "Only superuser can create a BranchAdmin"}, status=status.HTTP_403_FORBIDDEN)
         email = request.data['email']
         password = request.data['password']
         
@@ -94,3 +96,53 @@ class BranchAdminLogin(APIView):
             return Response("You are logged in")
         return Response('You are not allowed to log in to this branch')
 #####BranchAdmin Login #########
+
+
+#####BRANCH CREATION #########
+
+class BranchListCreateView(generics.ListCreateAPIView):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can create a Branch"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+#####BRANCH CREATION ENDS #########
+
+#####BRANCH CRUD OPERATIONS #########
+
+class BranchRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Branch.objects.all()
+    serializer_class = BranchSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can Do Operations"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+#####BRANCH CRUD OPERATIONS ENDS #########
+
+
+#####COURSE CRUD OPERATIONS  #########
+
+class CourseCreateView(generics.CreateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can create a course"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+class CourseRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can Do Operations"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+#####COURSE CRUD OPERATIONS ENDS #########

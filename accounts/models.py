@@ -95,6 +95,8 @@ class BranchAdmin(models.Model):
     superadmin = models.ForeignKey(User, on_delete=models.CASCADE)
     branch = models.ForeignKey('Branch', on_delete=models.CASCADE)
     # is_branchadmin = models.BooleanField(default=True)
+
+
 class Branch(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
@@ -104,6 +106,15 @@ class Branch(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class Batch(models.Model):
+    name = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 
 
 class Subject(models.Model):
