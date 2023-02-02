@@ -7,7 +7,10 @@ from rest_framework.views import APIView
 from django.shortcuts import render 
 from accounts.models import BranchAdmin,Branch
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
+from rest_framework import generics, authentication, permissions
+from django.contrib.auth import authenticate, login
+from rest_framework.authtoken.models import Token
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -77,3 +80,17 @@ class CreateBranchAdmin(generics.CreateAPIView):
 
 
 ############# CREATING BRANCH ADMIN ENDS #########
+
+#####BranchAdmin Login #########
+class BranchAdminLogin(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
+        
+        serializer = BranchAdmin.objects.get(email=email)
+        if check_password(password,serializer.password):
+            return Response("You are logged in")
+        return Response('You are not allowed to log in to this branch')
+#####BranchAdmin Login #########

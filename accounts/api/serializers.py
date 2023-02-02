@@ -35,4 +35,9 @@ class BranchAdminSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # fields = ['email','password','superadmin']
 
+# class BranchAdminLoginSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = BranchAdmin
+#         # exclude = ('superadmin','branch')
+#         fields = ['email', 'password' ]
 

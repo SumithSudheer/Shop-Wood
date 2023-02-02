@@ -94,7 +94,7 @@ class BranchAdmin(models.Model):
     password = models.CharField(max_length=128)
     superadmin = models.ForeignKey(User, on_delete=models.CASCADE)
     branch = models.ForeignKey('Branch', on_delete=models.CASCADE)
-
+    # is_branchadmin = models.BooleanField(default=True)
 class Branch(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
