@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User,BranchAdmin,Branch,Course,Subject,Topic,Batch,Module
+from accounts.models import User,BranchAdmin,Branch,Course,Subject,Topic,Batch,Module,SubTopic
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,7 +51,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
-
+        depth =1
 class BatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Batch
@@ -70,4 +70,9 @@ class ModuleSerializer(serializers.ModelSerializer):
 class TopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Topic
+        fields = '__all__'
+
+class SubTopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubTopic
         fields = '__all__'

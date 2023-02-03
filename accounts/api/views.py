@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .serializers import TopicSerializer, ModuleSerializer, UserSerializer,BranchAdminSerializer,BranchSerializer,CourseSerializer,BatchSerializer,SubjectSerializer
+from .serializers import SubTopicSerializer, TopicSerializer, ModuleSerializer, UserSerializer,BranchAdminSerializer,BranchSerializer,CourseSerializer,BatchSerializer,SubjectSerializer
 from rest_framework import status,generics
 from rest_framework.views import APIView
 from django.shortcuts import render 
-from accounts.models import BranchAdmin,Branch,Course,Batch,Subject,Module,Topic
+from accounts.models import BranchAdmin,Branch,Course,Batch,Subject,Module,Topic,SubTopic
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework import generics, authentication, permissions
@@ -236,4 +236,26 @@ class TopicRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().post(request, *args, **kwargs)
 
 #####TOPIC CRUD OPERATIONS ENDS #########
+
+#####SUBTOPIC CRUD OPERATIONS  #########
+
+class SubTopicCreateView(generics.CreateAPIView):
+    queryset = SubTopic.objects.all()
+    serializer_class = SubTopicSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can create a Topic"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+class SubTopicRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SubTopic.objects.all()
+    serializer_class = SubTopicSerializer
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return Response({"message": "Only admin can Do Operations"}, status=status.HTTP_403_FORBIDDEN)
+
+        return super().post(request, *args, **kwargs)
+
+#####SUBTOPIC CRUD OPERATIONS ENDS #########
 

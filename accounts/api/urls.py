@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from .views import TopicCreateView,TopicRetrieveUpdateDestroyView, ModuleCreateView,ModuleRetrieveUpdateDestroyView, SubjectRetrieveUpdateDestroyView, SubjectCreateView, CreateBranchAdmin,BranchAdminLogin,BranchListCreateView,BranchRetrieveUpdateDestroyView,CourseCreateView,CourseRetrieveUpdateDestroyView,BatchCreateView,BatchRetrieveUpdateDestroyView
+from .views import SubTopicCreateView,SubTopicRetrieveUpdateDestroyView, TopicCreateView,TopicRetrieveUpdateDestroyView, ModuleCreateView,ModuleRetrieveUpdateDestroyView, SubjectRetrieveUpdateDestroyView, SubjectCreateView, CreateBranchAdmin,BranchAdminLogin,BranchListCreateView,BranchRetrieveUpdateDestroyView,CourseCreateView,CourseRetrieveUpdateDestroyView,BatchCreateView,BatchRetrieveUpdateDestroyView
 urlpatterns = [
    
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -24,6 +24,8 @@ urlpatterns = [
     path('crud-module/<int:pk>/', ModuleRetrieveUpdateDestroyView.as_view(), name='crud-topic'),
     path('topic/', TopicCreateView.as_view(), name='create-topic'),
     path('crud-topic/<int:pk>/', TopicRetrieveUpdateDestroyView.as_view(), name='crud-topic'),
+    path('subtopic/', SubTopicCreateView.as_view(), name='create-topic'),
+    path('crud-subtopic/<int:pk>/', SubTopicRetrieveUpdateDestroyView.as_view(), name='crud-subtopic'),
 
 
 

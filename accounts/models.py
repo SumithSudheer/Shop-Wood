@@ -101,11 +101,15 @@ class Branch(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     courses = models.ManyToManyField('Course')
+    def __str__(self):
+        return self.name
 
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 class Batch(models.Model):
     name = models.CharField(max_length=100)
@@ -113,21 +117,30 @@ class Batch(models.Model):
     end_date = models.DateField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-
+    def __str__(self):
+        return self.name
 
 
 
 class Subject(models.Model):
     name = models.CharField(max_length=100)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 class Module(models.Model):
     name = models.CharField(max_length=100)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     time_needed = models.DurationField()
+    def __str__(self):
+        return self.name
 
 class Topic(models.Model):
     name = models.CharField(max_length=50)
     module = models.ForeignKey(Module,on_delete=models.CASCADE)
+
+class SubTopic(models.Model):
+    name = models.CharField(max_length=50)
+    topic = models.ManyToManyField(Topic)
 
 ############### AdditionEnds #################################
