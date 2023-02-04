@@ -117,6 +117,7 @@ class Batch(models.Model):
     end_date = models.DateField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 
@@ -138,9 +139,13 @@ class Module(models.Model):
 class Topic(models.Model):
     name = models.CharField(max_length=50)
     module = models.ForeignKey(Module,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 class SubTopic(models.Model):
     name = models.CharField(max_length=50)
-    topic = models.ManyToManyField(Topic)
+    topic = models.ForeignKey(Topic,on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
 
 ############### AdditionEnds #################################

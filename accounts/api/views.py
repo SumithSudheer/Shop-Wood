@@ -6,11 +6,13 @@ from rest_framework import status,generics
 from rest_framework.views import APIView
 from django.shortcuts import render 
 from accounts.models import BranchAdmin,Branch,Course,Batch,Subject,Module,Topic,SubTopic
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test 
 from django.contrib.auth.hashers import make_password,check_password
 from rest_framework import generics, authentication, permissions
 from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -258,4 +260,40 @@ class SubTopicRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().post(request, *args, **kwargs)
 
 #####SUBTOPIC CRUD OPERATIONS ENDS #########
+#####GET VIEW OF TOTAL #########
+
+@api_view(['GET'])
+def getsubtopic(request):
+    sub_topic = SubTopic.objects.all()
+    serializer = SubTopicSerializer(sub_topic,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def gettopic(request):
+    sub_topic = Topic.objects.all()
+    serializer = TopicSerializer(sub_topic,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getmodule(request):
+    sub_topic = Module.objects.all()
+    serializer = ModuleSerializer(sub_topic,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getcourse(request):
+    sub_topic = Course.objects.all()
+    serializer = CourseSerializer(sub_topic,many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getbranch(request):
+    sub_topic = Branch.objects.all()
+    serializer = BranchSerializer(sub_topic,many=True)
+    return Response(serializer.data)
+
+#####GET VIEW OF TOTALENDS #########
+
+
+
 

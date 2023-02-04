@@ -26,6 +26,16 @@ urlpatterns = [
     path('crud-topic/<int:pk>/', TopicRetrieveUpdateDestroyView.as_view(), name='crud-topic'),
     path('subtopic/', SubTopicCreateView.as_view(), name='create-topic'),
     path('crud-subtopic/<int:pk>/', SubTopicRetrieveUpdateDestroyView.as_view(), name='crud-subtopic'),
+    path('getsubtopic/',views.getsubtopic,name='getsubtopic'),
+    path('gettopic/',views.gettopic,name='gettopic'),
+    path('getmodule/',views.getmodule,name='getmodule'),
+    path('getcourse/',views.getcourse,name='getcourse'),
+    path('getbranch/',views.getbranch,name='getbranch'),
+
+
+
+
+
 
 
 
